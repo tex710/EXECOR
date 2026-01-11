@@ -1,0 +1,639 @@
+﻿<Window x:Class="HackHelper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:HackHelper.Converters"
+        Title="Launcher Loader" 
+        Height="650" Width="1100"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        ResizeMode="CanResize">
+
+    <Window.Resources>
+        <conv:Base64ToImageConverter x:Key="Base64ToImageConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <!-- Scrollbar Styles -->
+        <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border Background="{DynamicResource PrimaryBrush}" 
+                                CornerRadius="6"
+                                Margin="2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="6"
+                                    Margin="2"/>
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollBarThumb}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Button Styles -->
+        <Style TargetType="Button" x:Key="BaseButtonStyle">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}"/>
+
+        <Style x:Key="WindowButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource WindowButton}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SidebarButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="IconButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Shared Loader Item Template -->
+        <DataTemplate x:Key="LoaderItemTemplate">
+            <Border Background="{DynamicResource SurfaceBrush}" 
+                    BorderBrush="{DynamicResource BorderBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="15" 
+                    Margin="0,0,0,10"
+                    MouseDown="Loader_MouseDown"
+                    Cursor="Hand">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" 
+                            Width="50" 
+                            Height="50" 
+                            CornerRadius="6" 
+                            Background="{DynamicResource BackgroundBrush}" 
+                            Margin="0,0,15,0" 
+                            VerticalAlignment="Center">
+                        <Image Width="40" Height="40" Source="{Binding IconBase64, Converter={StaticResource Base64ToImageConverter}}"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <TextBlock Text="📌 " 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource PrimaryBrush}"
+                                       Visibility="{Binding IsPinned, Converter={StaticResource BoolToVisibilityConverter}}"
+                                       Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding Name}" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="{DynamicResource TextBrush}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding ExePath}" 
+                                   FontSize="10" 
+                                   Foreground="{DynamicResource SubTextBrush}" 
+                                   TextWrapping="Wrap" 
+                                   Margin="0,0,0,3"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🚀 " 
+                                       FontSize="11" 
+                                       Foreground="{DynamicResource SubTextBrush}"/>
+                            <TextBlock Text="{Binding LaunchCount}" 
+                                       FontSize="11" 
+                                       Foreground="{DynamicResource PrimaryBrush}" 
+                                       FontWeight="Bold"/>
+                            <TextBlock Text=" launches" 
+                                       FontSize="11" 
+                                       Foreground="{DynamicResource SubTextBrush}" 
+                                       Margin="2,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="🌐" 
+                                Style="{StaticResource IconButton}" 
+                                Click="VisitWebsite_Click" 
+                                Tag="{Binding}" 
+                                ToolTip="Visit Website" 
+                                Margin="0,0,5,0"/>
+                        <Button Content="▶" 
+                                Click="LaunchLoader_Click" 
+                                Tag="{Binding}" 
+                                Padding="12,8" 
+                                Margin="0,0,5,0" 
+                                Background="{DynamicResource PrimaryBrush}"/>
+                        <Button Content="🗑" 
+                                Style="{StaticResource DangerButton}" 
+                                Click="DeleteLauncher_Click" 
+                                Tag="{Binding}" 
+                                Padding="10,8"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Main Tab Style -->
+        <Style x:Key="MainTabStyle" TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" 
+                                Background="{DynamicResource SurfaceBrush}" 
+                                BorderThickness="0" 
+                                CornerRadius="6,6,0,0" 
+                                Padding="20,10" 
+                                Margin="0,0,5,0">
+                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <!-- Game Sub-Tab Style -->
+        <Style x:Key="GameTabStyle" TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" 
+                                Background="{DynamicResource BackgroundBrush}" 
+                                BorderThickness="0" 
+                                CornerRadius="6,6,6,6" 
+                                Padding="12,6" 
+                                Margin="0,0,3,0">
+                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource BackgroundBrush}" 
+            CornerRadius="12" 
+            BorderThickness="1" 
+            BorderBrush="{DynamicResource PrimaryBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Border Grid.Row="0" 
+                    Background="#0F0F12" 
+                    CornerRadius="12,12,0,0" 
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid Height="40">
+                    <TextBlock Text="EXECOR" 
+                               FontSize="18" 
+                               FontWeight="Bold" 
+                               Foreground="{DynamicResource PrimaryBrush}" 
+                               VerticalAlignment="Center" 
+                               Margin="15,0,0,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
+                        <Button Content="─" Style="{StaticResource WindowButton}" Click="MinimizeButton_Click"/>
+                        <Button Content="□" Style="{StaticResource WindowButton}" Click="MaximizeButton_Click"/>
+                        <Button Content="x" Style="{StaticResource CloseButton}" Click="CloseButton_Click" Height="33"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Main Content with Sidebar -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Side - Tabs and Content -->
+                <Grid Grid.Column="0" Margin="15">
+                    <TabControl Background="Transparent" BorderThickness="0">
+                        <TabControl.Resources>
+                            <Style TargetType="TabItem" BasedOn="{StaticResource MainTabStyle}"/>
+                        </TabControl.Resources>
+
+                        <!-- Loaders Tab -->
+                        <TabItem Header="🚀 Loaders">
+                            <Grid Background="#1C1C1F" Margin="0,-1,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Search Bar -->
+                                <Border Grid.Row="0" 
+                                        Background="{DynamicResource SurfaceBrush}" 
+                                        CornerRadius="6" 
+                                        Margin="10,10,10,5" 
+                                        Padding="10,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="LauncherSearchBox" 
+                                                 Grid.Column="0"
+                                                 Background="Transparent" 
+                                                 BorderThickness="0" 
+                                                 Foreground="{DynamicResource TextBrush}" 
+                                                 FontSize="13"
+                                                 VerticalAlignment="Center"
+                                                 TextChanged="LauncherSearchBox_TextChanged">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                                                        <VisualBrush.Visual>
+                                                                            <TextBlock Text="Search launchers..." 
+                                                                                       Foreground="{DynamicResource SubTextBrush}" 
+                                                                                       FontSize="13"/>
+                                                                        </VisualBrush.Visual>
+                                                                    </VisualBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <TextBlock Grid.Column="1" 
+                                                   Text="🔍" 
+                                                   FontSize="16" 
+                                                   Foreground="{DynamicResource SubTextBrush}" 
+                                                   VerticalAlignment="Center" 
+                                                   Margin="5,0,0,0"/>
+                                    </Grid>
+                                </Border>
+
+                                <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="10,0,10,10">
+                                    <TabControl.Resources>
+                                        <Style TargetType="TabItem" BasedOn="{StaticResource GameTabStyle}"/>
+                                    </TabControl.Resources>
+
+                                    <!-- CS2 -->
+                                    <TabItem Header="🎮 CS2">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                                            <ItemsControl x:Name="CS2ListBox" ItemTemplate="{StaticResource LoaderItemTemplate}"/>
+                                        </ScrollViewer>
+                                    </TabItem>
+
+                                    <!-- CSGO -->
+                                    <TabItem Header="🎯 CS:GO">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                                            <ItemsControl x:Name="CSGOListBox" ItemTemplate="{StaticResource LoaderItemTemplate}"/>
+                                        </ScrollViewer>
+                                    </TabItem>
+
+                                    <!-- Other -->
+                                    <TabItem Header="📦 Other">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                                            <ItemsControl x:Name="OtherListBox" ItemTemplate="{StaticResource LoaderItemTemplate}"/>
+                                        </ScrollViewer>
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- Passwords Tab -->
+                        <TabItem Header="🔒 Passwords">
+                            <Grid Background="#1C1C1F" Margin="0,-1,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Search Bar -->
+                                <Border Grid.Row="0" 
+                                        Background="{DynamicResource SurfaceBrush}" 
+                                        CornerRadius="6" 
+                                        Margin="10,10,10,5" 
+                                        Padding="10,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="PasswordSearchBox" 
+                                                 Grid.Column="0"
+                                                 Background="Transparent" 
+                                                 BorderThickness="0" 
+                                                 Foreground="{DynamicResource TextBrush}" 
+                                                 FontSize="13"
+                                                 VerticalAlignment="Center"
+                                                 TextChanged="PasswordSearchBox_TextChanged">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                                                        <VisualBrush.Visual>
+                                                                            <TextBlock Text="Search passwords..." 
+                                                                                       Foreground="{DynamicResource SubTextBrush}" 
+                                                                                       FontSize="13"/>
+                                                                        </VisualBrush.Visual>
+                                                                    </VisualBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <TextBlock Grid.Column="1" 
+                                                   Text="🔍" 
+                                                   FontSize="16" 
+                                                   Foreground="{DynamicResource SubTextBrush}" 
+                                                   VerticalAlignment="Center" 
+                                                   Margin="5,0,0,0"/>
+                                    </Grid>
+                                </Border>
+
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="10,0,10,10">
+                                    <ItemsControl x:Name="PasswordsListBox">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{DynamicResource SurfaceBrush}" 
+                                                        BorderBrush="{DynamicResource BorderBrush}" 
+                                                        BorderThickness="1" 
+                                                        CornerRadius="8" 
+                                                        Padding="15" 
+                                                        Margin="0,0,0,10"
+                                                        MouseDown="Password_MouseDown"
+                                                        Cursor="Hand">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <StackPanel Grid.Row="0">
+                                                            <TextBlock Text="{Binding ServiceName}" 
+                                                                       FontSize="16" 
+                                                                       FontWeight="Bold" 
+                                                                       Foreground="{DynamicResource TextBrush}" 
+                                                                       Margin="0,0,0,10"/>
+                                                            <Grid Margin="0,0,0,6">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="90"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Text="👤 Username:" 
+                                                                           Foreground="{DynamicResource SubTextBrush}" 
+                                                                           FontSize="12"/>
+                                                                <TextBlock Grid.Column="1" 
+                                                                           Text="{Binding Username}" 
+                                                                           Foreground="{DynamicResource TextBrush}" 
+                                                                           FontSize="12"/>
+                                                            </Grid>
+                                                            <Grid Margin="0,0,0,6">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="90"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Text="📧 Email:" 
+                                                                           Foreground="{DynamicResource SubTextBrush}" 
+                                                                           FontSize="12"/>
+                                                                <TextBlock Grid.Column="1" 
+                                                                           Text="{Binding Email}" 
+                                                                           Foreground="{DynamicResource TextBrush}" 
+                                                                           FontSize="12"/>
+                                                            </Grid>
+                                                            <Grid Margin="0,0,0,6">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="90"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Text="🔑 Password:" 
+                                                                           Foreground="{DynamicResource SubTextBrush}" 
+                                                                           FontSize="12"/>
+                                                                <TextBlock Grid.Column="1" 
+                                                                           Text="••••••••" 
+                                                                           Foreground="{DynamicResource TextBrush}" 
+                                                                           FontSize="12"/>
+                                                            </Grid>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                                            <Button Content="📋 Copy" 
+                                                                    Click="CopyPassword_Click" 
+                                                                    Tag="{Binding}" 
+                                                                    Padding="12,8" 
+                                                                    Margin="0,0,8,0"/>
+                                                            <Button Content="🗑 Delete" 
+                                                                    Style="{StaticResource DangerButton}" 
+                                                                    Click="DeletePassword_Click" 
+                                                                    Tag="{Binding}" 
+                                                                    Padding="12,8"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+
+                <!-- Right Side - Action Buttons -->
+                <Border Grid.Column="1" 
+                        Background="#1C1C1F" 
+                        CornerRadius="0,0,12,0" 
+                        Margin="0,0,0,0" 
+                        Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="Import" 
+                                   FontSize="14" 
+                                   FontWeight="Bold" 
+                                   Foreground="{DynamicResource SubTextBrush}" 
+                                   Margin="0,0,0,15"/>
+
+                        <Button Content="➕ Add Loader" 
+                                Style="{StaticResource SidebarButton}" 
+                                Click="AddLauncher_Click"/>
+                        <Button Content="🔑 Add Password" 
+                                Style="{StaticResource SidebarButton}" 
+                                Click="AddPassword_Click"/>
+
+
+                        <Button x:Name="EditButton"
+                                Content="✏️ Edit" 
+                                Style="{StaticResource SidebarButton}"
+                                Click="Edit_Click"
+                                IsEnabled="False"/>
+                        <Button x:Name="PinLoaderButton"
+                                Content="📌 Pin" 
+                                Style="{StaticResource SidebarButton}"
+                                Click="PinLoader_Click"
+                                IsEnabled="False"/>
+
+                        <TextBlock Text="Misc" 
+                                   FontSize="14" 
+                                   FontWeight="Bold" 
+                                   Foreground="{DynamicResource SubTextBrush}" 
+                                   Margin="0,20,0,15"/>
+
+                        <Button Content="⚙️ Settings" 
+                                Style="{StaticResource SidebarButton}" 
+                                Click="Settings_Click"/>
+                        <Button Content="📊 Statistics" 
+                                Style="{StaticResource SidebarButton}" 
+                                Click="Statistics_Click"/>
+                        <Button Content="🎨 Theme Editor" 
+                                Style="{StaticResource SidebarButton}" 
+                                Click="ThemeEditor_Click"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
