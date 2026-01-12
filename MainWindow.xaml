@@ -245,6 +245,77 @@
             </Border>
         </DataTemplate>
 
+        <!-- Steam Account Item Template -->
+        <DataTemplate x:Key="SteamAccountItemTemplate">
+            <Border Background="{DynamicResource SurfaceBrush}" 
+                    BorderBrush="{DynamicResource BorderBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="15" 
+                    Margin="0,0,0,10"
+                    MouseDown="SteamAccount_MouseDown"
+                    Cursor="Hand">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" 
+                            Width="50" 
+                            Height="50" 
+                            CornerRadius="25" 
+                            Background="{DynamicResource PrimaryBrush}" 
+                            Margin="0,0,15,0" 
+                            VerticalAlignment="Center">
+                        <TextBlock Text="🎮" 
+                                   FontSize="24" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding AccountName}" 
+                                   FontSize="16" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="{DynamicResource TextBrush}"
+                                   Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding Username}" 
+                                   FontSize="11" 
+                                   Foreground="{DynamicResource SubTextBrush}" 
+                                   Margin="0,0,0,3"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding LoginCountDisplay}" 
+                                       FontSize="11" 
+                                       Foreground="{DynamicResource PrimaryBrush}" 
+                                       FontWeight="Bold"
+                                       Margin="0,0,10,0"/>
+                            <TextBlock Text="{Binding LastUsedDisplay}" 
+                                       FontSize="11" 
+                                       Foreground="{DynamicResource SubTextBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="🔄" 
+                                Click="SwitchSteamAccount_Click" 
+                                Tag="{Binding}" 
+                                Padding="12,8" 
+                                Margin="0,0,5,0" 
+                                Background="{DynamicResource PrimaryBrush}"
+                                ToolTip="Switch to this account"/>
+                        <Button Content="🗑" 
+                                Style="{StaticResource DangerButton}" 
+                                Click="DeleteSteamAccount_Click" 
+                                Tag="{Binding}" 
+                                Padding="10,8"
+                                ToolTip="Delete account"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
         <!-- Main Tab Style -->
         <Style x:Key="MainTabStyle" TargetType="TabItem">
             <Setter Property="Template">
@@ -557,7 +628,7 @@
                                                                            FontSize="12"/>
                                                                 <TextBlock Grid.Column="1" 
                                                                            Text="••••••••" 
-                                                                           Foreground="{DynamicResource TextBrush}" 
+                                                                           Foreground="{DynamicResource TextBrush}"
                                                                            FontSize="12"/>
                                                             </Grid>
                                                         </StackPanel>
@@ -578,6 +649,69 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- Steam Accounts Tab -->
+                        <TabItem Header="🎮 Steam Accounts">
+                            <Grid Background="#1C1C1F" Margin="0,-1,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Search Bar -->
+                                <Border Grid.Row="0" 
+                                        Background="{DynamicResource SurfaceBrush}" 
+                                        CornerRadius="6" 
+                                        Margin="10,10,10,5" 
+                                        Padding="10,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="SteamAccountSearchBox" 
+                                                 Grid.Column="0"
+                                                 Background="Transparent" 
+                                                 BorderThickness="0" 
+                                                 Foreground="{DynamicResource TextBrush}" 
+                                                 FontSize="13"
+                                                 VerticalAlignment="Center"
+                                                 TextChanged="SteamAccountSearchBox_TextChanged">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                                                        <VisualBrush.Visual>
+                                                                            <TextBlock Text="Search Steam accounts..." 
+                                                                                       Foreground="{DynamicResource SubTextBrush}" 
+                                                                                       FontSize="13"/>
+                                                                        </VisualBrush.Visual>
+                                                                    </VisualBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <TextBlock Grid.Column="1" 
+                                                   Text="🔍" 
+                                                   FontSize="16" 
+                                                   Foreground="{DynamicResource SubTextBrush}" 
+                                                   VerticalAlignment="Center" 
+                                                   Margin="5,0,0,0"/>
+                                    </Grid>
+                                </Border>
+
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="10,0,10,10">
+                                    <ItemsControl x:Name="SteamAccountsListBox" ItemTemplate="{StaticResource SteamAccountItemTemplate}"/>
                                 </ScrollViewer>
                             </Grid>
                         </TabItem>
@@ -603,7 +737,9 @@
                         <Button Content="🔑 Add Password" 
                                 Style="{StaticResource SidebarButton}" 
                                 Click="AddPassword_Click"/>
-
+                        <Button Content="🎮 Add Steam Account" 
+                                Style="{StaticResource SidebarButton}" 
+                                Click="AddSteamAccount_Click"/>
 
                         <Button x:Name="EditButton"
                                 Content="✏️ Edit" 

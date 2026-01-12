@@ -18,7 +18,7 @@ using System.Windows.Threading;
 
 namespace HackHelper
 {
-    
+
 
     public class EmptyStringToVisibilityConverter : IValueConverter
     {
@@ -45,14 +45,20 @@ namespace HackHelper
         private Settings settings;
         private DispatcherTimer clipboardTimer;
 
-        // NEW: Selection tracking
+        // NEW: Steam Account Manager
+        private SteamAccountManager steamAccountManager;
+        private List<SteamAccount> steamAccounts;
+
+        // Selection tracking
         private Launcher selectedLauncher = null;
         private PasswordEntry selectedPassword = null;
+        private SteamAccount selectedSteamAccount = null;
 
         public MainWindow()
         {
             InitializeComponent();
             dataService = new DataService();
+            steamAccountManager = new SteamAccountManager();
             LoadData();
 
             // Apply saved theme
@@ -68,8 +74,11 @@ namespace HackHelper
             launchers = dataService.LoadLaunchers();
             passwords = dataService.LoadPasswords();
             settings = dataService.LoadSettings();
+            steamAccounts = steamAccountManager.GetAllAccounts();
+
             RefreshLaunchersList();
             RefreshPasswordsList();
+            RefreshSteamAccountsList();
         }
 
         private void RefreshLaunchersList(string searchQuery = "")
@@ -84,7 +93,7 @@ namespace HackHelper
                 );
             }
 
-            // NEW: Sort by pinned status first, then by name
+            // Sort by pinned status first, then by name
             filteredLaunchers = filteredLaunchers.OrderByDescending(l => l.IsPinned).ThenBy(l => l.Name);
 
             var cs2Launchers = filteredLaunchers.Where(l => l.GameType == "CS2").ToList();
@@ -118,6 +127,23 @@ namespace HackHelper
             PasswordsListBox.ItemsSource = filteredPasswords.ToList();
         }
 
+        // NEW: Refresh Steam Accounts List
+        private void RefreshSteamAccountsList(string searchQuery = "")
+        {
+            var filteredAccounts = steamAccounts.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                filteredAccounts = filteredAccounts.Where(a =>
+                    a.AccountName.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    a.Username.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0
+                );
+            }
+
+            SteamAccountsListBox.ItemsSource = null;
+            SteamAccountsListBox.ItemsSource = filteredAccounts.ToList();
+        }
+
         // SEARCH HANDLERS
         private void LauncherSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -129,13 +155,20 @@ namespace HackHelper
             RefreshPasswordsList(PasswordSearchBox.Text);
         }
 
-        // NEW: SELECTION TRACKING
+        // NEW: Steam Account Search Handler
+        private void SteamAccountSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+        }
+
+        // SELECTION TRACKING
         private void Loader_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border border && border.DataContext is Launcher launcher)
             {
                 selectedLauncher = launcher;
-                selectedPassword = null; // Clear password selection
+                selectedPassword = null;
+                selectedSteamAccount = null;
                 UpdateEditButtons();
             }
         }
@@ -145,12 +178,25 @@ namespace HackHelper
             if (sender is Border border && border.DataContext is PasswordEntry password)
             {
                 selectedPassword = password;
-                selectedLauncher = null; // Clear launcher selection
+                selectedLauncher = null;
+                selectedSteamAccount = null;
                 UpdateEditButtons();
             }
         }
 
-        // NEW: Update button states based on selection
+        // NEW: Steam Account Selection
+        private void SteamAccount_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border border && border.DataContext is SteamAccount account)
+            {
+                selectedSteamAccount = account;
+                selectedLauncher = null;
+                selectedPassword = null;
+                UpdateEditButtons();
+            }
+        }
+
+        // Update button states based on selection
         private void UpdateEditButtons()
         {
             if (selectedLauncher != null)
@@ -164,6 +210,11 @@ namespace HackHelper
                 EditButton.IsEnabled = true;
                 PinLoaderButton.IsEnabled = false;
             }
+            else if (selectedSteamAccount != null)
+            {
+                EditButton.IsEnabled = true;
+                PinLoaderButton.IsEnabled = false;
+            }
             else
             {
                 EditButton.IsEnabled = false;
@@ -171,7 +222,7 @@ namespace HackHelper
             }
         }
 
-        // NEW: Unified Edit button handler
+        // Unified Edit button handler
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
             if (selectedLauncher != null)
@@ -182,9 +233,13 @@ namespace HackHelper
             {
                 EditPasswordEntry(selectedPassword);
             }
+            else if (selectedSteamAccount != null)
+            {
+                EditSteamAccount(selectedSteamAccount);
+            }
         }
 
-        // NEW: Edit Launcher
+        // Edit Launcher
         private void EditLauncher(Launcher launcher)
         {
             var dialog = new EditLauncherDialog(launcher)
@@ -195,7 +250,7 @@ namespace HackHelper
             if (dialog.ShowDialog() == true)
             {
                 dataService.UpdateLauncher(dialog.EditedLauncher);
-                launchers = dataService.LoadLaunchers(); // Reload
+                launchers = dataService.LoadLaunchers();
                 RefreshLaunchersList(LauncherSearchBox.Text);
                 selectedLauncher = null;
                 UpdateEditButtons();
@@ -204,7 +259,7 @@ namespace HackHelper
             }
         }
 
-        // NEW: Edit Password
+        // Edit Password
         private void EditPasswordEntry(PasswordEntry password)
         {
             var dialog = new EditPasswordDialog(password)
@@ -215,7 +270,7 @@ namespace HackHelper
             if (dialog.ShowDialog() == true)
             {
                 dataService.UpdatePassword(dialog.EditedPassword);
-                passwords = dataService.LoadPasswords(); // Reload
+                passwords = dataService.LoadPasswords();
                 RefreshPasswordsList(PasswordSearchBox.Text);
                 selectedPassword = null;
                 UpdateEditButtons();
@@ -224,13 +279,33 @@ namespace HackHelper
             }
         }
 
-        // NEW: Pin/Unpin Loader
+        // NEW: Edit Steam Account
+        private void EditSteamAccount(SteamAccount account)
+        {
+            var dialog = new AddSteamAccountWindow(account)
+            {
+                Owner = this
+            };
+
+            if (dialog.ShowDialog() == true && dialog.NewAccount != null)
+            {
+                steamAccountManager.UpdateAccount(dialog.NewAccount);
+                steamAccounts = steamAccountManager.GetAllAccounts();
+                RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+                selectedSteamAccount = null;
+                UpdateEditButtons();
+
+                ToastService.Success($"{dialog.NewAccount.AccountName} updated", "Account updated");
+            }
+        }
+
+        // Pin/Unpin Loader
         private void PinLoader_Click(object sender, RoutedEventArgs e)
         {
             if (selectedLauncher != null)
             {
                 dataService.ToggleLauncherPin(selectedLauncher.Id);
-                launchers = dataService.LoadLaunchers(); // Reload
+                launchers = dataService.LoadLaunchers();
                 RefreshLaunchersList(LauncherSearchBox.Text);
 
                 string message = selectedLauncher.IsPinned ? "unpinned" : "pinned";
@@ -280,7 +355,6 @@ namespace HackHelper
         // ANIMATION METHODS
         private void AnimateMinimize()
         {
-            // Just scale, no fade
             var scaleDown = new DoubleAnimation
             {
                 From = 1.0,
@@ -293,11 +367,9 @@ namespace HackHelper
             {
                 var transform = (ScaleTransform)this.RenderTransform;
 
-                // Remove animation clocks FIRST
                 transform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
                 transform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
 
-                // Then reset values
                 transform.ScaleX = 1.0;
                 transform.ScaleY = 1.0;
 
@@ -310,7 +382,6 @@ namespace HackHelper
 
         private void AnimateClose()
         {
-            // Just scale down, no fade
             var scaleDown = new DoubleAnimation
             {
                 From = 1.0,
@@ -342,7 +413,6 @@ namespace HackHelper
                 dataService.SaveLaunchers(launchers);
                 RefreshLaunchersList(LauncherSearchBox.Text);
 
-                // TOAST notification
                 ToastService.Success($"{dialog.NewLauncher.Name} added", "Loader added to library");
             }
         }
@@ -358,7 +428,6 @@ namespace HackHelper
                 {
                     launcher.LaunchCount++;
 
-                    // Track launch timestamp
                     if (launcher.LaunchHistory == null)
                         launcher.LaunchHistory = new List<DateTime>();
 
@@ -373,12 +442,10 @@ namespace HackHelper
                         UseShellExecute = true
                     });
 
-                    // TOAST notification
                     ToastService.Success($"{launcher.Name} launched", "Started successfully");
                 }
                 catch (Exception ex)
                 {
-                    // TOAST for errors
                     ToastService.Error("Launch failed", ex.Message);
                 }
             }
@@ -405,12 +472,10 @@ namespace HackHelper
                         UseShellExecute = true
                     });
 
-                    // TOAST notification
                     ToastService.Info("Opening website", $"Launching {launcher.Name} website");
                 }
                 catch (Exception ex)
                 {
-                    // TOAST for errors
                     ToastService.Error("Website error", ex.Message);
                 }
             }
@@ -430,7 +495,6 @@ namespace HackHelper
                     dataService.SaveLaunchers(launchers);
                     RefreshLaunchersList(LauncherSearchBox.Text);
 
-                    // TOAST notification
                     ToastService.Warning($"{launcher.Name} deleted", "Removed from library");
                 }
             }
@@ -446,7 +510,6 @@ namespace HackHelper
                 dataService.SavePasswords(passwords);
                 RefreshPasswordsList(PasswordSearchBox.Text);
 
-                // TOAST notification
                 ToastService.Success($"{dialog.NewPassword.ServiceName} added", "Password saved securely");
             }
         }
@@ -461,7 +524,6 @@ namespace HackHelper
                 Clipboard.SetText(password.Password);
                 StartClipboardClearTimer();
 
-                // TOAST with countdown and progress bar
                 if (settings.ClipboardAutoClear)
                 {
                     ToastService.Show(
@@ -493,8 +555,99 @@ namespace HackHelper
                     dataService.SavePasswords(passwords);
                     RefreshPasswordsList(PasswordSearchBox.Text);
 
-                    // TOAST notification
                     ToastService.Warning($"{password.ServiceName} deleted", "Password removed");
+                }
+            }
+        }
+
+        // NEW: STEAM ACCOUNT METHODS
+        private void AddSteamAccount_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new AddSteamAccountWindow
+            {
+                Owner = this
+            };
+
+            if (dialog.ShowDialog() == true && dialog.NewAccount != null)
+            {
+                try
+                {
+                    steamAccountManager.AddAccount(dialog.NewAccount);
+                    steamAccounts = steamAccountManager.GetAllAccounts();
+                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+
+                    ToastService.Success($"{dialog.NewAccount.AccountName} added", "Steam account saved");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ToastService.Error("Account exists", ex.Message);
+                }
+            }
+        }
+
+        private async void SwitchSteamAccount_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var account = button?.Tag as SteamAccount;
+
+            if (account != null)
+            {
+                try
+                {
+                    // Disable button during operation
+                    button.IsEnabled = false;
+
+                    ToastService.Info("Switching account...", "Please wait");
+
+                    // Run the switch operation on a background thread
+                    await System.Threading.Tasks.Task.Run(() =>
+                    {
+                        SteamRegistryManager.PerformFullAccountSwitch(
+                            account.Username,
+                            account.Password,
+                            launchSteam: true
+                        );
+                    });
+
+                    steamAccountManager.RecordAccountUsage(account.Id);
+                    steamAccounts = steamAccountManager.GetAllAccounts();
+                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+
+                    ToastService.Success($"Switched to {account.AccountName}", "Steam is launching with this account");
+                }
+                catch (Exception ex)
+                {
+                    ToastService.Error("Switch failed", ex.Message);
+                }
+                finally
+                {
+                    // Re-enable button
+                    button.IsEnabled = true;
+                }
+            }
+        }
+
+        private void DeleteSteamAccount_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var account = button?.Tag as SteamAccount;
+
+            if (account != null)
+            {
+                var result = MessageBox.Show(
+                    $"Delete Steam account '{account.AccountName}'?",
+                    "Confirm Delete",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    steamAccountManager.DeleteAccount(account.Id);
+                    steamAccounts = steamAccountManager.GetAllAccounts();
+                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+
+                    ToastService.Warning($"{account.AccountName} deleted", "Account removed");
                 }
             }
         }
@@ -507,7 +660,6 @@ namespace HackHelper
             };
             settingsWindow.ShowDialog();
 
-            // Reload settings after window closes in case they changed
             settings = dataService.LoadSettings();
         }
 
