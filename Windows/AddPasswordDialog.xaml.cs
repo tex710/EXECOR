@@ -15,11 +15,48 @@ namespace HackHelper
         public PasswordEntry NewPassword { get; private set; }
         private bool isPasswordVisible = false;
         private string selectedIconBase64 = null;
+        private bool _isEditMode = false;
+        private PasswordEntry _editingPassword = null;
 
+        // Constructor for Add mode
         public AddPasswordDialog()
         {
             InitializeComponent();
             UpdatePasswordStrength(string.Empty);
+        }
+
+        // Constructor for Edit mode
+        public AddPasswordDialog(PasswordEntry password) : this()
+        {
+            _isEditMode = true;
+            _editingPassword = password;
+
+            Title = "Edit Password";
+            TitleTextBlock.Text = "✏️ EDIT PASSWORD";
+            ActionButton.Content = "💾 Save Changes";
+
+            // Populate fields
+            ServiceTextBox.Text = password.ServiceName;
+            UsernameTextBox.Text = password.Username;
+            EmailTextBox.Text = password.Email ?? string.Empty;
+            PasswordBox.Password = password.Password;
+            selectedIconBase64 = password.IconBase64;
+
+            // Show icon preview if exists
+            if (!string.IsNullOrEmpty(selectedIconBase64))
+            {
+                try
+                {
+                    IconPreviewImage.Source = IconExtractor.Base64ToImage(selectedIconBase64);
+                    IconPreviewBorder.Visibility = Visibility.Visible;
+                }
+                catch
+                {
+                    IconPreviewBorder.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            UpdatePasswordStrength(password.Password);
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
@@ -32,17 +69,34 @@ namespace HackHelper
                 return;
             }
 
-            // Don't auto-fetch favicon - it can freeze the app
-            // User can manually choose an icon if they want
-
-            NewPassword = new PasswordEntry
+            // Create or update password entry
+            if (_isEditMode && _editingPassword != null)
             {
-                ServiceName = ServiceTextBox.Text,
-                Username = UsernameTextBox.Text,
-                Email = EmailTextBox.Text,
-                Password = GetCurrentPassword(),
-                IconBase64 = selectedIconBase64
-            };
+                // Update existing password
+                _editingPassword.ServiceName = ServiceTextBox.Text.Trim();
+                _editingPassword.Username = UsernameTextBox.Text.Trim();
+                _editingPassword.Email = string.IsNullOrWhiteSpace(EmailTextBox.Text)
+                    ? null
+                    : EmailTextBox.Text.Trim();
+                _editingPassword.Password = GetCurrentPassword();
+                _editingPassword.IconBase64 = selectedIconBase64;
+
+                NewPassword = _editingPassword;
+            }
+            else
+            {
+                // Create new password
+                NewPassword = new PasswordEntry
+                {
+                    ServiceName = ServiceTextBox.Text.Trim(),
+                    Username = UsernameTextBox.Text.Trim(),
+                    Email = string.IsNullOrWhiteSpace(EmailTextBox.Text)
+                        ? null
+                        : EmailTextBox.Text.Trim(),
+                    Password = GetCurrentPassword(),
+                    IconBase64 = selectedIconBase64
+                };
+            }
 
             DialogResult = true;
             Close();

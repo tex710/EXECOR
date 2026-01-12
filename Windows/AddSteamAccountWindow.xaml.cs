@@ -24,38 +24,31 @@ namespace HackHelper
             UpdatePasswordStrength(string.Empty);
         }
 
-        // For editing existing accounts
+        // Edit-mode constructor
         public AddSteamAccountWindow(SteamAccount account) : this()
         {
             _isEditMode = true;
             _editingAccount = account;
+
+            /* ----  LOOK & FEEL SWITCH  ---- */
             Title = "Edit Steam Account";
+            TitleTextBlock.Text = "✏️ EDIT ACCOUNT";
+            AddAccountButton.Content = "💾 Save Changes";
+            /* -------------------------------- */
+
+            // Populate fields
             AccountNameTextBox.Text = account.AccountName;
             UsernameTextBox.Text = account.Username;
             PasswordBox.Password = account.Password ?? string.Empty;
             SteamIdTextBox.Text = account.SteamId ?? string.Empty;
-            UpdatePasswordStrength(account.Password ?? string.Empty);
-        }
 
-        // Called after InitializeComponent in edit mode
-        public void SetEditMode()
-        {
-            Title = "Edit Steam Account";
-            // Find the button by walking the visual tree
-            var contentGrid = (Grid)Content;
-            var mainBorder = (Border)contentGrid.Children[1];
-            var dockPanel = (DockPanel)mainBorder.Child;
-            var buttonStackPanel = (StackPanel)dockPanel.Children[0];
-            var addButton = (Button)buttonStackPanel.Children[0];
-            addButton.Content = "💾 Save Changes";
+            UpdatePasswordStrength(account.Password ?? string.Empty);
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
-            {
                 DragMove();
-            }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -89,15 +82,12 @@ namespace HackHelper
                 return;
             }
 
-            // Get password from visible field or hidden field
             string? password = _isPasswordVisible
                 ? PasswordTextBox.Text
                 : PasswordBox.Password;
 
-            // Create or update account
             if (_isEditMode && _editingAccount != null)
             {
-                // Update existing account
                 _editingAccount.AccountName = AccountNameTextBox.Text.Trim();
                 _editingAccount.Username = UsernameTextBox.Text.Trim();
                 _editingAccount.Password = string.IsNullOrWhiteSpace(password) ? null : password;
@@ -106,7 +96,6 @@ namespace HackHelper
             }
             else
             {
-                // Create new account
                 NewAccount = new SteamAccount
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -126,17 +115,13 @@ namespace HackHelper
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (!_isPasswordVisible)
-            {
                 UpdatePasswordStrength(PasswordBox.Password);
-            }
         }
 
         private void PasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_isPasswordVisible)
-            {
                 UpdatePasswordStrength(PasswordTextBox.Text);
-            }
         }
 
         private void ShowHidePassword_Click(object sender, RoutedEventArgs e)
@@ -145,7 +130,6 @@ namespace HackHelper
 
             if (_isPasswordVisible)
             {
-                // Show password as text
                 PasswordTextBox.Text = PasswordBox.Password;
                 PasswordBoxBorder.Visibility = Visibility.Collapsed;
                 PasswordTextBoxBorder.Visibility = Visibility.Visible;
@@ -155,7 +139,6 @@ namespace HackHelper
             }
             else
             {
-                // Hide password
                 PasswordBox.Password = PasswordTextBox.Text;
                 PasswordTextBoxBorder.Visibility = Visibility.Collapsed;
                 PasswordBoxBorder.Visibility = Visibility.Visible;
@@ -167,16 +150,10 @@ namespace HackHelper
         private void AutoGenerate_Click(object sender, RoutedEventArgs e)
         {
             string generatedPassword = GenerateSecurePassword(16);
-
             if (_isPasswordVisible)
-            {
                 PasswordTextBox.Text = generatedPassword;
-            }
             else
-            {
                 PasswordBox.Password = generatedPassword;
-            }
-
             UpdatePasswordStrength(generatedPassword);
         }
 
@@ -188,26 +165,18 @@ namespace HackHelper
             const string special = "!@#$%^&*-_=+";
             const string allChars = uppercase + lowercase + digits + special;
 
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                var password = new StringBuilder(length);
-                var data = new byte[length];
+            using var rng = RandomNumberGenerator.Create();
+            var password = new StringBuilder(length);
 
-                // Ensure at least one of each type
-                password.Append(uppercase[GetRandomIndex(rng, uppercase.Length)]);
-                password.Append(lowercase[GetRandomIndex(rng, lowercase.Length)]);
-                password.Append(digits[GetRandomIndex(rng, digits.Length)]);
-                password.Append(special[GetRandomIndex(rng, special.Length)]);
+            password.Append(uppercase[GetRandomIndex(rng, uppercase.Length)]);
+            password.Append(lowercase[GetRandomIndex(rng, lowercase.Length)]);
+            password.Append(digits[GetRandomIndex(rng, digits.Length)]);
+            password.Append(special[GetRandomIndex(rng, special.Length)]);
 
-                // Fill the rest randomly
-                for (int i = 4; i < length; i++)
-                {
-                    password.Append(allChars[GetRandomIndex(rng, allChars.Length)]);
-                }
+            for (int i = 4; i < length; i++)
+                password.Append(allChars[GetRandomIndex(rng, allChars.Length)]);
 
-                // Shuffle the password
-                return new string(password.ToString().OrderBy(x => GetRandomIndex(rng, length)).ToArray());
-            }
+            return new string(password.ToString().OrderBy(x => GetRandomIndex(rng, length)).ToArray());
         }
 
         private int GetRandomIndex(RandomNumberGenerator rng, int max)
@@ -235,19 +204,19 @@ namespace HackHelper
             if (score < 3)
             {
                 strengthText = "Weak";
-                color = "#EF4444"; // Red
+                color = "#EF4444";
                 targetWidth = 100;
             }
             else if (score < 4)
             {
                 strengthText = "Medium";
-                color = "#F59E0B"; // Orange
+                color = "#F59E0B";
                 targetWidth = 200;
             }
             else
             {
                 strengthText = "Strong";
-                color = "#10B981"; // Green
+                color = "#10B981";
                 targetWidth = 300;
             }
 
@@ -259,14 +228,12 @@ namespace HackHelper
         private int CalculatePasswordStrength(string password)
         {
             int score = 0;
-
             if (password.Length >= 8) score++;
             if (password.Length >= 12) score++;
             if (password.Any(char.IsUpper)) score++;
             if (password.Any(char.IsLower)) score++;
             if (password.Any(char.IsDigit)) score++;
             if (password.Any(ch => !char.IsLetterOrDigit(ch))) score++;
-
             return score;
         }
 
@@ -278,7 +245,6 @@ namespace HackHelper
                 Duration = TimeSpan.FromMilliseconds(300),
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
             };
-
             StrengthBar.BeginAnimation(WidthProperty, widthAnimation);
             StrengthBar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
         }

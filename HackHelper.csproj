@@ -10,6 +10,14 @@
 		<RootNamespace>HackHelper</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Windows\EditLauncherDialog.xaml.cs" />
+	  <Compile Remove="Windows\EditPasswordDialog.xaml.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Remove="Windows\EditLauncherDialog.xaml" />
+	  <Page Remove="Windows\EditPasswordDialog.xaml" />
+	</ItemGroup>
+	<ItemGroup>
 		<COMReference Include="{d37e2a3e-8545-3a39-9f4f-31827c9124ab}">
 			<WrapperTool>tlbimp</WrapperTool>
 			<VersionMinor>4</VersionMinor>

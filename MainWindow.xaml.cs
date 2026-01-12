@@ -243,40 +243,40 @@ namespace HackHelper
         // Edit Launcher
         private void EditLauncher(Launcher launcher)
         {
-            var dialog = new EditLauncherDialog(launcher)
+            var dialog = new AddLauncherDialog(launcher)
             {
                 Owner = this
             };
 
-            if (dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == true && dialog.NewLauncher != null)
             {
-                dataService.UpdateLauncher(dialog.EditedLauncher);
+                dataService.UpdateLauncher(dialog.NewLauncher);
                 launchers = dataService.LoadLaunchers();
                 RefreshLaunchersList(LauncherSearchBox.Text);
                 selectedLauncher = null;
                 UpdateEditButtons();
 
-                ToastService.Success($"{dialog.EditedLauncher.Name} updated", "Changes saved");
+                ToastService.Success($"{dialog.NewLauncher.Name} updated", "Changes saved");
             }
         }
 
         // Edit Password
         private void EditPasswordEntry(PasswordEntry password)
         {
-            var dialog = new EditPasswordDialog(password)
+            var dialog = new AddPasswordDialog(password)
             {
                 Owner = this
             };
 
-            if (dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == true && dialog.NewPassword != null)
             {
-                dataService.UpdatePassword(dialog.EditedPassword);
+                dataService.UpdatePassword(dialog.NewPassword);
                 passwords = dataService.LoadPasswords();
                 RefreshPasswordsList(PasswordSearchBox.Text);
                 selectedPassword = null;
                 UpdateEditButtons();
 
-                ToastService.Success($"{dialog.EditedPassword.ServiceName} updated", "Password updated");
+                ToastService.Success($"{dialog.NewPassword.ServiceName} updated", "Password updated");
             }
         }
 
