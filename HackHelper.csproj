@@ -6,7 +6,7 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<ApplicationIcon>execor.e.logo.ico</ApplicationIcon>
+		<ApplicationIcon>Resources\EXECOR.ico</ApplicationIcon>
 		<RootNamespace>HackHelper</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
@@ -18,7 +18,7 @@
 		</COMReference>
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="execor.e.logo.ico" />
+	  <Content Include="Resources\EXECOR.ico" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.Xml;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -581,6 +582,69 @@ namespace HackHelper
                 catch (InvalidOperationException ex)
                 {
                     ToastService.Error("Account exists", ex.Message);
+                }
+            }
+        }
+
+        private void CopySteamUsername_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var account = button?.Tag as SteamAccount;
+
+            if (account != null)
+            {
+                try
+                {
+                    Clipboard.SetText(account.Username);
+
+                    // Visual feedback - change button content temporarily
+                    var originalContent = button.Content;
+                    button.Content = "✓";
+
+                    Task.Delay(1000).ContinueWith(_ =>
+                    {
+                        Dispatcher.Invoke(() => button.Content = originalContent);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to copy username: {ex.Message}", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void CopySteamPassword_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var account = button?.Tag as SteamAccount;
+
+            if (account != null)
+            {
+                if (string.IsNullOrEmpty(account.Password))
+                {
+                    MessageBox.Show("No password saved for this account.", "No Password",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                try
+                {
+                    Clipboard.SetText(account.Password);
+
+                    // Visual feedback - change button content temporarily
+                    var originalContent = button.Content;
+                    button.Content = "✓";
+
+                    Task.Delay(1000).ContinueWith(_ =>
+                    {
+                        Dispatcher.Invoke(() => button.Content = originalContent);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to copy password: {ex.Message}", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

@@ -33,6 +33,7 @@ namespace HackHelper
             AccountNameTextBox.Text = account.AccountName;
             UsernameTextBox.Text = account.Username;
             PasswordBox.Password = account.Password ?? string.Empty;
+            SteamIdTextBox.Text = account.SteamId ?? string.Empty;
             UpdatePasswordStrength(account.Password ?? string.Empty);
         }
 
@@ -100,6 +101,7 @@ namespace HackHelper
                 _editingAccount.AccountName = AccountNameTextBox.Text.Trim();
                 _editingAccount.Username = UsernameTextBox.Text.Trim();
                 _editingAccount.Password = string.IsNullOrWhiteSpace(password) ? null : password;
+                _editingAccount.SteamId = string.IsNullOrWhiteSpace(SteamIdTextBox.Text) ? null : SteamIdTextBox.Text.Trim();
                 NewAccount = _editingAccount;
             }
             else
@@ -111,6 +113,7 @@ namespace HackHelper
                     AccountName = AccountNameTextBox.Text.Trim(),
                     Username = UsernameTextBox.Text.Trim(),
                     Password = string.IsNullOrWhiteSpace(password) ? null : password,
+                    SteamId = string.IsNullOrWhiteSpace(SteamIdTextBox.Text) ? null : SteamIdTextBox.Text.Trim(),
                     DateAdded = DateTime.Now,
                     LastUsed = null
                 };
