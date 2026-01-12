@@ -8,6 +8,7 @@ namespace HackHelper.Models
         public string AccountName { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string? Password { get; set; }
+        public string? SteamId { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime? LastUsed { get; set; }
         public int LoginCount { get; set; } = 0;
@@ -19,6 +20,6 @@ namespace HackHelper.Models
             ? $"Last used: {LastUsed.Value:MMM dd, yyyy}"
             : "Never used";
 
-        public string LoginCountDisplay => $"🚀 {LoginCount} logins";
+        public string LoginCountDisplay => $"{LoginCount} logins";
     }
 }

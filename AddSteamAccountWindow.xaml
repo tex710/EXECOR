@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Add Steam Account" 
-        Height="450" Width="500"
+        Height="550" Width="500"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         AllowsTransparency="True"
@@ -10,32 +10,7 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
-        <!-- Button Styles -->
-        <Style TargetType="Button" x:Key="BaseButtonStyle">
-            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="15,8"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Opacity" Value="0.8"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}"/>
-
+        <!-- Window Control Buttons -->
         <Style x:Key="WindowButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
@@ -68,8 +43,72 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
-            <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+        <!-- TextBox Style -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextBrush}"/>
+        </Style>
+
+        <!-- TextBox Border Wrapper Style -->
+        <Style x:Key="TextBoxBorder" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+
+        <!-- PasswordBox Style -->
+        <Style TargetType="PasswordBox">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="PasswordChar" Value="●"/>
+        </Style>
+
+        <!-- PasswordBox Border Wrapper Style -->
+        <Style x:Key="PasswordBoxBorder" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+
+        <!-- Label Style -->
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <!-- Button Style -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Opacity" Value="0.8"/>
@@ -77,59 +116,64 @@
             </Style.Triggers>
         </Style>
 
-        <!-- TextBox Style -->
-        <Style TargetType="TextBox">
+        <!-- Cancel Button Style -->
+        <Style x:Key="CancelButton" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="40"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                CornerRadius="6">
-                            <ScrollViewer x:Name="PART_ContentHost" 
-                                          Margin="{TemplateBinding Padding}" 
-                                          VerticalAlignment="Center"/>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
-        <!-- PasswordBox Style -->
-        <Style TargetType="PasswordBox">
+        <!-- Generate Button Style -->
+        <Style x:Key="GenerateButton" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="PasswordBox">
+                    <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                CornerRadius="6">
-                            <ScrollViewer x:Name="PART_ContentHost" 
-                                          Margin="{TemplateBinding Padding}" 
-                                          VerticalAlignment="Center"/>
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
-    <Border Background="{DynamicResource BackgroundBrush}" 
-            CornerRadius="12" 
-            BorderThickness="1" 
-            BorderBrush="{DynamicResource PrimaryBrush}">
+    <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="12" BorderThickness="1" BorderBrush="{DynamicResource PrimaryBrush}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -137,127 +181,105 @@
             </Grid.RowDefinitions>
 
             <!-- Title Bar -->
-            <Border Grid.Row="0" 
-                    Background="#0F0F12" 
-                    CornerRadius="12,12,0,0" 
-                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Border Grid.Row="0" Background="#0F0F12" CornerRadius="12,12,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
-                    <TextBlock Text="Add Steam Account" 
-                               FontSize="16" 
-                               FontWeight="Bold" 
-                               Foreground="{DynamicResource PrimaryBrush}" 
-                               VerticalAlignment="Center" 
-                               Margin="15,0,0,0"/>
+                    <TextBlock Text="🎮 ADD STEAM ACCOUNT" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}" VerticalAlignment="Center" Margin="15,0,0,0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
                         <Button Content="x" Style="{StaticResource CloseButton}" Click="CloseButton_Click" Height="33"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- Main Content -->
-            <Border Grid.Row="1" 
-                    Background="#1C1C1F" 
-                    CornerRadius="0,0,12,12" 
-                    Padding="25">
-                <StackPanel>
+            <!-- Content -->
+            <DockPanel Grid.Row="1" LastChildFill="True">
+                <!-- Buttons at bottom -->
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,0,20,20">
+                    <Button Content="➕ Add Account" Click="AddAccountButton_Click" Margin="0,0,10,0" Width="150"/>
+                    <Button Content="Cancel" Click="CancelButton_Click" Style="{StaticResource CancelButton}" Width="100"/>
+                </StackPanel>
+
+                <!-- Content area -->
+                <StackPanel Margin="20">
                     <!-- Account Name -->
-                    <TextBlock Text="Account Name" 
-                               FontSize="13" 
-                               FontWeight="SemiBold" 
-                               Foreground="{DynamicResource SubTextBrush}" 
-                               Margin="0,0,0,8"/>
-                    <TextBox x:Name="AccountNameTextBox" 
-                             Margin="0,0,0,20">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <VisualBrush Stretch="None" AlignmentX="Left">
-                                                    <VisualBrush.Visual>
-                                                        <TextBlock Text="e.g., Main Account" 
-                                                                   Foreground="{DynamicResource SubTextBrush}" 
-                                                                   FontSize="13"
-                                                                   Margin="10,8"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
+                    <Label Content="Account Name:"/>
+                    <Border Style="{StaticResource TextBoxBorder}" Margin="0,0,0,15">
+                        <TextBox x:Name="AccountNameTextBox"/>
+                    </Border>
 
                     <!-- Username -->
-                    <TextBlock Text="Steam Username" 
-                               FontSize="13" 
-                               FontWeight="SemiBold" 
-                               Foreground="{DynamicResource SubTextBrush}" 
-                               Margin="0,0,0,8"/>
-                    <TextBox x:Name="UsernameTextBox" 
-                             Margin="0,0,0,20">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <VisualBrush Stretch="None" AlignmentX="Left">
-                                                    <VisualBrush.Visual>
-                                                        <TextBlock Text="Steam login username" 
-                                                                   Foreground="{DynamicResource SubTextBrush}" 
-                                                                   FontSize="13"
-                                                                   Margin="10,8"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
+                    <Label Content="Steam Username:"/>
+                    <Border Style="{StaticResource TextBoxBorder}" Margin="0,0,0,15">
+                        <TextBox x:Name="UsernameTextBox"/>
+                    </Border>
 
                     <!-- Password -->
-                    <TextBlock Text="Password (Optional)" 
-                               FontSize="13" 
-                               FontWeight="SemiBold" 
-                               Foreground="{DynamicResource SubTextBrush}" 
-                               Margin="0,0,0,8"/>
-                    <PasswordBox x:Name="PasswordBox" 
-                                 Margin="0,0,0,10"/>
+                    <Label Content="Password (Optional):"/>
+                    <Border x:Name="PasswordBoxBorder" Style="{StaticResource PasswordBoxBorder}" Margin="0,0,0,8">
+                        <PasswordBox x:Name="PasswordBox" 
+                                     PasswordChar="●"
+                                     SelectionBrush="{DynamicResource PrimaryBrush}"
+                                     PasswordChanged="PasswordBox_PasswordChanged"/>
+                    </Border>
+                    <Border x:Name="PasswordTextBoxBorder" Style="{StaticResource TextBoxBorder}" Margin="0,0,0,8" Visibility="Collapsed">
+                        <TextBox x:Name="PasswordTextBox"
+                                 TextChanged="PasswordTextBox_TextChanged"/>
+                    </Border>
+
+                    <!-- Password Strength Indicator -->
+                    <StackPanel Margin="0,0,0,15">
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Password Strength" 
+                                       FontSize="11" 
+                                       Foreground="{DynamicResource SubTextBrush}"
+                                       Grid.Column="0"/>
+                            <TextBlock x:Name="StrengthText"
+                                       Text="No Password" 
+                                       FontSize="11" 
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource SubTextBrush}"
+                                       Grid.Column="1"/>
+                        </Grid>
+                        <Border Height="8" 
+                                Background="{DynamicResource BorderBrush}" 
+                                CornerRadius="4">
+                            <Border x:Name="StrengthBar"
+                                    HorizontalAlignment="Left" 
+                                    Width="0"
+                                    Background="#6B7280" 
+                                    CornerRadius="4"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Auto Generate and Show/Hide Buttons -->
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="⚡ Auto Generate" 
+                                Click="AutoGenerate_Click" 
+                                Style="{StaticResource GenerateButton}"
+                                Margin="0,0,8,0"/>
+                        <Button x:Name="ShowHideButton"
+                                Content="👁 Show" 
+                                Click="ShowHidePassword_Click" 
+                                Style="{StaticResource GenerateButton}"/>
+                    </StackPanel>
 
                     <!-- Info Text -->
                     <TextBlock Text="💡 Password is optional but required for auto-login" 
                                FontSize="11" 
                                Foreground="{DynamicResource SubTextBrush}" 
-                               Margin="0,0,0,25"
+                               Margin="0,15,0,0"
                                TextWrapping="Wrap"/>
 
-                    <!-- Buttons -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Button Content="Cancel" 
-                                Grid.Column="0"
-                                Style="{StaticResource DangerButton}"
-                                Click="CancelButton_Click"
-                                Margin="0,0,5,0"
-                                Padding="15,10"/>
-
-                        <Button Content="Add Account" 
-                                Grid.Column="1"
-                                Click="AddAccountButton_Click"
-                                Margin="5,0,0,0"
-                                Padding="15,10"/>
-                    </Grid>
+                    <!-- Add this after Username -->
+                    <Label Content="Steam ID (Optional):"/>
+                    <Border Style="{StaticResource TextBoxBorder}" Margin="0,0,0,15">
+                        <TextBox x:Name="SteamIdTextBox"/>
+                    </Border>
                 </StackPanel>
-            </Border>
+            </DockPanel>
         </Grid>
     </Border>
 </Window>

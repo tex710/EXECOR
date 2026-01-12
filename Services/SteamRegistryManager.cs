@@ -39,19 +39,55 @@ namespace HackHelper.Services
 
         public static bool IsSteamRunning() => Process.GetProcessesByName(STEAM_PROCESS_NAME).Length > 0;
 
-        public static bool CloseSteam(int timeoutSeconds = 10)
+        public static bool CloseSteam(int timeoutSeconds = 15)
         {
             var procs = Process.GetProcessesByName(STEAM_PROCESS_NAME);
             if (procs.Length == 0) return true;
 
-            foreach (var p in procs) try { p.CloseMainWindow(); } catch { }
+            // First attempt: graceful shutdown
+            foreach (var p in procs)
+            {
+                try
+                {
+                    if (!p.HasExited)
+                    {
+                        p.CloseMainWindow();
+                    }
+                }
+                catch { }
+            }
+
+            // Wait for graceful shutdown
             var sw = Stopwatch.StartNew();
             while (IsSteamRunning() && sw.Elapsed.TotalSeconds < timeoutSeconds)
+            {
                 Thread.Sleep(500);
+            }
 
+            // If still running, force kill all Steam processes
             if (IsSteamRunning())
-                foreach (var p in Process.GetProcessesByName(STEAM_PROCESS_NAME))
-                    try { p.Kill(); } catch { }
+            {
+                procs = Process.GetProcessesByName(STEAM_PROCESS_NAME);
+                foreach (var p in procs)
+                {
+                    try
+                    {
+                        if (!p.HasExited)
+                        {
+                            p.Kill();
+                            p.WaitForExit(2000); // Wait up to 2 seconds for kill to complete
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to kill Steam process {p.Id}: {ex.Message}");
+                    }
+                }
+
+                // Final check after force kill
+                Thread.Sleep(1000);
+            }
+
             return !IsSteamRunning();
         }
 
@@ -100,11 +136,25 @@ namespace HackHelper.Services
         /* ----------  THE ONLY METHOD YOU ACTUALLY CALL  ---------- */
         public static void PerformFullAccountSwitch(string username, string password = null, bool launchSteam = true)
         {
-            // 1. kill Steam
-            if (IsSteamRunning() && !CloseSteam())
-                throw new Exception("Failed to close Steam.");
+            // 1. kill Steam with better error handling
+            if (IsSteamRunning())
+            {
+                Debug.WriteLine("[Steam] Attempting to close Steam...");
 
-            Thread.Sleep(1000);
+                bool closed = CloseSteam(15); // Increased timeout to 15 seconds
+
+                if (!closed)
+                {
+                    // More detailed error message
+                    var remainingProcs = Process.GetProcessesByName(STEAM_PROCESS_NAME);
+                    var procInfo = string.Join(", ", remainingProcs.Select(p => $"PID:{p.Id}"));
+                    throw new Exception($"Failed to close Steam after 15 seconds. Remaining processes: {procInfo}. Try closing Steam manually.");
+                }
+
+                Debug.WriteLine("[Steam] Steam closed successfully.");
+            }
+
+            Thread.Sleep(1500); // Increased wait time
 
             // 2. registry (same as SAM)
             SwitchAccount(username, password);
