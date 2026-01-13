@@ -8,8 +8,7 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         AllowsTransparency="True"
-        WindowStyle="None"
-        ResizeMode="CanResizeWithGrip">
+        WindowStyle="None">
 
     <Window.Resources>
         <conv:SteamAvatarConverter x:Key="SteamAvatarConverter"/>
@@ -49,6 +48,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+
 
         <!-- Button Styles -->
         <Style x:Key="BaseButtonStyle" TargetType="Button">
@@ -461,18 +462,25 @@
             </Grid.RowDefinitions>
 
             <!-- Title Bar -->
-            <Border Grid.Row="0" 
-                    Background="#0F0F12" 
-                    CornerRadius="12,12,0,0" 
-                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Border Grid.Row="0"
+        Background="#0F0F12"
+        CornerRadius="12,12,0,0"
+        MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
-                    <TextBlock Text="EXECOR" 
-                               FontSize="18" 
-                               FontWeight="Bold" 
-                               Foreground="{DynamicResource PrimaryBrush}" 
-                               VerticalAlignment="Center" 
-                               Margin="15,0,0,0"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
+
+                    <!-- Logo text with Eurostile Bold -->
+                    <TextBlock Text="EXECOR"
+           FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
+           FontSize="24"
+           FontWeight="Bold"
+           Foreground="{DynamicResource PrimaryBrush}"
+           VerticalAlignment="Center"
+           Margin="12,0,0,0"/>
+
+                    <!-- Window buttons stay on the right -->
+                    <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,10,0">
                         <Button Style="{StaticResource WindowButton}" Click="MinimizeButton_Click">
                             <TextBlock Text="━" FontSize="16" VerticalAlignment="Center" Margin="0,-3,0,0"/>
                         </Button>
@@ -494,8 +502,8 @@
                     <ColumnDefinition Width="2*" MinWidth="400"/>
                     <ColumnDefinition Width="1*" MinWidth="200"/>
                 </Grid.ColumnDefinitions>
-                
-                
+
+
 
                 <!-- Left Side - Tabs and Content -->
                 <Grid Grid.Column="0" Margin="15">
@@ -846,12 +854,40 @@
                                 Style="{StaticResource SidebarButton}" 
                                 Click="ThemeEditor_Click"/>
                     </StackPanel>
-                    
-                    
+
+
                 </Border>
 
-           
+
+
+
             </Grid>
+
+            <!-- Custom Resize Grip -->
+            <Thumb x:Name="CustomResizeGrip"
+                       Grid.Row="1"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom"
+                       Width="16"
+                       Height="16"
+                       Cursor="SizeNWSE"
+                       Margin="0,0,8,8"
+                       DragDelta="CustomResizeGrip_DragDelta">
+                <Thumb.Template>
+                    <ControlTemplate>
+                        <Border Background="{DynamicResource BorderBrush}"
+                CornerRadius="4"
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Padding="3">
+
+                        </Border>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+
         </Grid>
     </Border>
 </Window>

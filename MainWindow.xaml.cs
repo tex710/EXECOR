@@ -774,5 +774,14 @@ namespace HackHelper
         {
             AnimateClose();
         }
+
+        private void CustomResizeGrip_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            double newWidth = this.ActualWidth + e.HorizontalChange;
+            double newHeight = this.ActualHeight + e.VerticalChange;
+
+            this.Width = Math.Max(this.MinWidth, newWidth);
+            this.Height = Math.Max(this.MinHeight, newHeight);
+        }
     }
 }
