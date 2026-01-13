@@ -11,9 +11,22 @@
         ShowInTaskbar="False"
         ResizeMode="NoResize">
 
+    <Window.Resources>
+        <!--========  GLOBAL FONT  ========-->
+        <Style TargetType="TextElement">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="Control">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <!--================================-->
+    </Window.Resources>
+
+    <!-- REMOVED colored border, kept clean background with shadow -->
     <Border Background="{DynamicResource SurfaceBrush}" 
-            BorderBrush="{DynamicResource PrimaryBrush}" 
-            BorderThickness="1" 
             CornerRadius="8"
             Padding="15">
         <Border.Effect>

@@ -10,6 +10,17 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
+        <!--========  GLOBAL FONT  ========-->
+        <Style TargetType="TextElement">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="Control">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <!--================================-->
 
         <!-- Scrollbar Styles -->
         <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
@@ -17,8 +28,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Thumb}">
                         <Border Background="{DynamicResource PrimaryBrush}" 
-                        CornerRadius="6"
-                        Margin="2"/>
+                                CornerRadius="6"
+                                Margin="2"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -32,8 +43,8 @@
                     <ControlTemplate TargetType="{x:Type ScrollBar}">
                         <Grid>
                             <Border Background="{TemplateBinding Background}" 
-                            CornerRadius="6"
-                            Margin="2"/>
+                                    CornerRadius="6"
+                                    Margin="2"/>
                             <Track x:Name="PART_Track" IsDirectionReversed="True">
                                 <Track.Thumb>
                                     <Thumb Style="{StaticResource ScrollBarThumb}"/>
@@ -57,7 +68,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -67,13 +79,29 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
                 </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource WindowButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -108,34 +136,72 @@
             <Setter Property="Foreground" Value="{DynamicResource SubTextBrush}"/>
             <Setter Property="Margin" Value="0,5,0,0"/>
         </Style>
-
-        <!-- TextBlock Styles -->
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-        </Style>
     </Window.Resources>
 
-    <Border Background="{DynamicResource BackgroundBrush}" 
-            CornerRadius="12" 
-            BorderThickness="1" 
-            BorderBrush="{DynamicResource PrimaryBrush}">
+    <!-- REMOVED colored border, kept clean background -->
+    <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Title Bar -->
+            <!-- Title Bar with Animated Gradient Text -->
             <Border Grid.Row="0" Background="#0F0F12" CornerRadius="12,12,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
-                    <TextBlock Text="📊 STATISTICS" 
-                               FontSize="18" 
-                               FontWeight="Bold" 
-                               Foreground="{DynamicResource PrimaryBrush}" 
+                    <!-- Stylized Title Text with Gradient Animation -->
+                    <TextBlock Text="STATISTICS"
+                               FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
+                               FontSize="18"
+                               FontWeight="Bold"
                                VerticalAlignment="Center" 
-                               Margin="15,0,0,0"/>
+                               Margin="15,0,0,0">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="TitleGradient"
+                                                 StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="GradientTranslate" X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.8"/>
+                        </TextBlock.Effect>
+
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="GradientTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
+                    <!-- Window Control Button -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
-                        <Button Content="x" Style="{StaticResource CloseButton}" Click="CloseButton_Click" Height="33"/>
+                        <Button Style="{StaticResource CloseButton}" Click="CloseButton_Click">
+                            <TextBlock Text="🗙" FontSize="16" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Border>

@@ -10,6 +10,17 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
+        <!--========  GLOBAL FONT  ========-->
+        <Style TargetType="TextElement">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="Control">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <!--================================-->
 
         <!-- Scrollbar Styles -->
         <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
@@ -17,8 +28,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Thumb}">
                         <Border Background="{DynamicResource PrimaryBrush}" 
-                        CornerRadius="6"
-                        Margin="2"/>
+                                CornerRadius="6"
+                                Margin="2"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -32,8 +43,8 @@
                     <ControlTemplate TargetType="{x:Type ScrollBar}">
                         <Grid>
                             <Border Background="{TemplateBinding Background}" 
-                            CornerRadius="6"
-                            Margin="2"/>
+                                    CornerRadius="6"
+                                    Margin="2"/>
                             <Track x:Name="PART_Track" IsDirectionReversed="True">
                                 <Track.Thumb>
                                     <Thumb Style="{StaticResource ScrollBarThumb}"/>
@@ -44,7 +55,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
 
         <!-- ComboBox Style -->
         <Style TargetType="ComboBox">
@@ -60,11 +70,11 @@
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
                             <ToggleButton 
-                        Name="ToggleButton" 
-                        Grid.Column="2"
-                        Focusable="False"
-                        IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                        ClickMode="Press">
+                                Name="ToggleButton" 
+                                Grid.Column="2"
+                                Focusable="False"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                ClickMode="Press">
                                 <ToggleButton.Style>
                                     <Style TargetType="ToggleButton">
                                         <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
@@ -74,21 +84,21 @@
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="ToggleButton">
                                                     <Border 
-                                                Background="{TemplateBinding Background}" 
-                                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="6">
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="6">
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition />
                                                                 <ColumnDefinition Width="20" />
                                                             </Grid.ColumnDefinitions>
                                                             <Path 
-                                                        Grid.Column="1"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Data="M 0 0 L 4 4 L 8 0 Z"
-                                                        Fill="{DynamicResource SubTextBrush}" />
+                                                                Grid.Column="1"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Data="M 0 0 L 4 4 L 8 0 Z"
+                                                                Fill="{DynamicResource SubTextBrush}" />
                                                         </Grid>
                                                     </Border>
                                                 </ControlTemplate>
@@ -103,14 +113,14 @@
                                 </ToggleButton.Style>
                             </ToggleButton>
                             <ContentPresenter 
-                        Name="ContentSite"
-                        IsHitTestVisible="False" 
-                        Content="{TemplateBinding SelectionBoxItem}"
-                        ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                        ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                        Margin="10,3,23,3"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Left">
+                                Name="ContentSite"
+                                IsHitTestVisible="False" 
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                Margin="10,3,23,3"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left">
                                 <ContentPresenter.Resources>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
@@ -118,24 +128,24 @@
                                 </ContentPresenter.Resources>
                             </ContentPresenter>
                             <Popup 
-                        Name="Popup"
-                        Placement="Bottom"
-                        IsOpen="{TemplateBinding IsDropDownOpen}"
-                        AllowsTransparency="True" 
-                        Focusable="False"
-                        PopupAnimation="Slide">
+                                Name="Popup"
+                                Placement="Bottom"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                AllowsTransparency="True" 
+                                Focusable="False"
+                                PopupAnimation="Slide">
                                 <Grid 
-                            Name="DropDown"
-                            SnapsToDevicePixels="True"
-                            MinWidth="{TemplateBinding ActualWidth}"
-                            MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    Name="DropDown"
+                                    SnapsToDevicePixels="True"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border 
-                                x:Name="DropDownBorder"
-                                Background="{DynamicResource SurfaceBrush}"
-                                BorderThickness="1"
-                                BorderBrush="{DynamicResource BorderBrush}"
-                                CornerRadius="6"
-                                Margin="0,2,0,0">
+                                        x:Name="DropDownBorder"
+                                        Background="{DynamicResource SurfaceBrush}"
+                                        BorderThickness="1"
+                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        CornerRadius="6"
+                                        Margin="0,2,0,0">
                                         <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                             <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                                         </ScrollViewer>
@@ -157,12 +167,12 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBoxItem">
                         <Border 
-                    Name="Border"
-                    Background="{TemplateBinding Background}"
-                    BorderThickness="0"
-                    CornerRadius="4"
-                    Padding="{TemplateBinding Padding}"
-                    Margin="2">
+                            Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="0"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="2">
                             <ContentPresenter />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -177,7 +187,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
 
         <Style TargetType="Button" x:Key="BaseButtonStyle">
             <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
@@ -215,7 +224,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -225,13 +235,29 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
                 </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource WindowButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -281,10 +307,8 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="{DynamicResource BackgroundBrush}" 
-            CornerRadius="12" 
-            BorderThickness="1" 
-            BorderBrush="{DynamicResource PrimaryBrush}">
+    <!-- REMOVED colored border, kept clean background -->
+    <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -292,24 +316,67 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Title Bar -->
+            <!-- Title Bar with Animated Gradient Text -->
             <Border Grid.Row="0" 
                     Background="#0F0F12" 
                     CornerRadius="12,12,0,0" 
                     MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
-                    <TextBlock Text="🎨 THEME EDITOR" 
-                               FontSize="16" 
-                               FontWeight="Bold" 
-                               Foreground="{DynamicResource PrimaryBrush}" 
+                    <!-- Stylized Title Text with Gradient Animation -->
+                    <TextBlock Text="THEME EDITOR"
+                               FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
+                               FontSize="16"
+                               FontWeight="Bold"
                                VerticalAlignment="Center" 
-                               Margin="15,0,0,0"/>
-                    <Button Content="✕" 
-                            Style="{StaticResource CloseButton}" 
+                               Margin="15,0,0,0">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="TitleGradient"
+                                                 StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="GradientTranslate" X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.8"/>
+                        </TextBlock.Effect>
+
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="GradientTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
+                    <!-- Window Control Button -->
+                    <Button Style="{StaticResource CloseButton}" 
                             Click="CloseButton_Click" 
                             HorizontalAlignment="Right" 
-                            Margin="0,0,10,0"
-                            Height="33"/>
+                            Margin="0,0,10,0">
+                        <TextBlock Text="🗙" FontSize="16" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                    </Button>
                 </Grid>
             </Border>
 
@@ -660,9 +727,9 @@
                                 Click="DeleteCustomTheme_Click"/>
 
                         <TextBlock Text="Config" 
-                                Foreground="{DynamicResource SubTextBrush}" 
-                                FontSize="12" 
-                                Margin="0,0,0,5"/>
+                                   Foreground="{DynamicResource SubTextBrush}" 
+                                   FontSize="12" 
+                                   Margin="0,0,0,5"/>
 
                         <Button Content="⬆️ Import" 
                                 Style="{StaticResource SidebarButton}" 
