@@ -14,6 +14,19 @@
         <conv:SteamAvatarConverter x:Key="SteamAvatarConverter"/>
         <conv:Base64ToImageConverter x:Key="Base64ToImageConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        
+        
+       <!--========  GLOBAL FONT  ========-->
+<Style TargetType="TextElement">
+    <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+</Style>
+<Style TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+</Style>
+<Style TargetType="Control">
+    <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+</Style>
+<!--================================-->
 
         <!-- Scrollbar Styles -->
         <Style x:Key="ScrollBarThumb" TargetType="Thumb">
@@ -386,20 +399,44 @@
             </Border>
         </DataTemplate>
 
-        <!-- Main Tab Style -->
         <Style x:Key="MainTabStyle" TargetType="TabItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border Name="Border" 
-                                Background="{DynamicResource SurfaceBrush}" 
-                                BorderThickness="0" 
-                                CornerRadius="6,6,0,0" 
-                                Padding="20,10" 
-                                Margin="0,0,5,0">
-                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border x:Name="Border"
+                        Background="{DynamicResource SurfaceBrush}"
+                        CornerRadius="6,6,0,0"
+                        Padding="20,10"
+                        Margin="0,0,5,0">
+                            <Grid>
+                                <!-- Normal Text -->
+                                <TextBlock x:Name="HeaderText"
+                                   Text="{TemplateBinding Header}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+
+                                <!-- Glow Text (hidden by default) -->
+                                <TextBlock x:Name="GlowText"
+                                   Text="{TemplateBinding Header}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextBrush}">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect x:Name="GlowEffect"
+                                                  Color="White"
+                                                  BlurRadius="12"
+                                                  ShadowDepth="1"
+                                                  Opacity="1"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Grid>
                         </Border>
+
                         <ControlTemplate.Triggers>
+                            <!-- Selected Tab: show glow -->
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="Border" Property="Background">
                                     <Setter.Value>
@@ -409,46 +446,83 @@
                                         </LinearGradientBrush>
                                     </Setter.Value>
                                 </Setter>
+
+                                <Setter TargetName="GlowText" Property="Visibility" Value="Visible"/>
                             </Trigger>
+
+                            <!-- Unselected Tab: hide glow -->
                             <Trigger Property="IsSelected" Value="False">
-                                <Setter TargetName="Border" Property="Opacity" Value="0.6"/>
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                                <Setter TargetName="GlowText" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="13"/>
         </Style>
+
 
         <!-- Game Sub-Tab Style -->
         <Style x:Key="GameTabStyle" TargetType="TabItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily"
+            Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border Name="Border" 
-                                Background="{DynamicResource BackgroundBrush}" 
-                                BorderThickness="0" 
-                                CornerRadius="6,6,6,6" 
-                                Padding="12,6" 
-                                Margin="0,0,3,0">
-                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border x:Name="Border"
+                        Background="{DynamicResource SurfaceBrush}"
+                        CornerRadius="6"
+                        Padding="12,6"
+                        Margin="0,0,3,0">
+                            <Grid>
+                                <!-- normal text -->
+                                <TextBlock x:Name="HeaderText"
+                                   Text="{TemplateBinding Header}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                                <!-- glowing text (hidden by default) -->
+                                <TextBlock x:Name="GlowText"
+                                   Text="{TemplateBinding Header}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="White"
+                                                  BlurRadius="12"
+                                                  ShadowDepth="0"
+                                                  Opacity="1"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Grid>
                         </Border>
+
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryBrush}"/>
-                            </Trigger>
+                            <!--  UNSELECTED  -->
                             <Trigger Property="IsSelected" Value="False">
-                                <Setter TargetName="Border" Property="Opacity" Value="0.6"/>
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                                <Setter TargetName="Border" Property="Opacity" Value="0.60"/>
+                            </Trigger>
+
+                            <!--  SELECTED  -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Opacity" Value="1"/>
+                                <Setter TargetName="GlowText" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="12"/>
         </Style>
     </Window.Resources>
 
@@ -473,9 +547,61 @@
            FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
            FontSize="24"
            FontWeight="Bold"
-           Foreground="{DynamicResource PrimaryBrush}"
            VerticalAlignment="Center"
-           Margin="12,0,0,0"/>
+           Margin="12,0,0,0">
+
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="TitleGradient"
+                             StartPoint="0,0"
+                             EndPoint="1,0"
+                             SpreadMethod="Repeat">
+
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                
+
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <!-- MOVE -->
+                                        <TranslateTransform x:Name="GradientTranslate" X="0"/>
+
+                                        <!-- ROTATE ≈ 60° -->
+                                        <RotateTransform Angle="-40"
+                                     CenterX="0.5"
+                                     CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                          BlurRadius="10"
+                          ShadowDepth="0"
+                          Opacity="0.8"/>
+                        </TextBlock.Effect>
+
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                        Storyboard.TargetName="GradientTranslate"
+                        Storyboard.TargetProperty="X"
+                        From="0"
+                        To="1"
+                        Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+
+                    </TextBlock>
+
+
+
 
                     <!-- Window buttons stay on the right -->
                     <StackPanel Orientation="Horizontal"
