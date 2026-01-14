@@ -35,9 +35,41 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Thumb">
-                        <Border Background="{DynamicResource PrimaryBrush}"
-                                CornerRadius="6"
-                                Margin="2"/>
+                        <Border CornerRadius="6"
+                        Margin="2">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" SpreadMethod="Repeat">
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <TranslateTransform Y="0"/>
+                                            <RotateTransform Angle="-15" CenterX="0.5" CenterY="0.5"/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Effect>
+                                <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                          BlurRadius="8"
+                                          ShadowDepth="0"
+                                          Opacity="0.6"/>
+                            </Border.Effect>
+                            <Border.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation
+                    Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)"
+                    From="0"
+                    To="1"
+                    Duration="0:0:1.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Border.Triggers>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -51,8 +83,8 @@
                     <ControlTemplate TargetType="ScrollBar">
                         <Grid>
                             <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="6"
-                                    Margin="2"/>
+                            CornerRadius="6"
+                            Margin="2"/>
                             <Track x:Name="PART_Track" IsDirectionReversed="True">
                                 <Track.Thumb>
                                     <Thumb Style="{StaticResource ScrollBarThumb}"/>
@@ -92,6 +124,138 @@
         </Style>
 
         <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}"/>
+
+        <Style x:Key="TabItemButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="6"
+                        Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <!-- Normal Text -->
+                                <TextBlock x:Name="NormalText"
+                                   Text="{TemplateBinding Content}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="{TemplateBinding Foreground}"/>
+
+                                <!-- Glow Text (for hover) -->
+                                <TextBlock x:Name="GlowText"
+                                   Text="{TemplateBinding Content}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed"
+                                   Foreground="{DynamicResource TextBrush}">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="White"
+                                                  BlurRadius="12"
+                                                  ShadowDepth="0"
+                                                  Opacity="1"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Hover state -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="GlowText" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="NormalText" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+
+                            <!-- Disabled state -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PasswordButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="6"
+                        Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <!-- Normal Text -->
+                                <TextBlock x:Name="NormalText"
+                                   Text="{TemplateBinding Content}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="{TemplateBinding Foreground}"/>
+
+                                <!-- Glow Text (for hover) -->
+                                <TextBlock x:Name="GlowText"
+                                   Text="{TemplateBinding Content}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed"
+                                   Foreground="{DynamicResource TextBrush}">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="White"
+                                                  BlurRadius="12"
+                                                  ShadowDepth="0"
+                                                  Opacity="1"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Hover state -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="GlowText" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="NormalText" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+
+                            <!-- Disabled state -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <!-- UPDATED WINDOW BUTTONS -->
         <Style x:Key="WindowButton" TargetType="Button">
@@ -270,14 +434,78 @@
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                             <TextBlock Text="📌 "
-                                       FontSize="12"
-                                       Foreground="{DynamicResource PrimaryBrush}"
-                                       Visibility="{Binding IsPinned, Converter={StaticResource BoolToVisibilityConverter}}"
-                                       Margin="0,0,5,0"/>
+                                FontSize="12"
+                                Visibility="{Binding IsPinned, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Margin="0,0,5,0">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <TranslateTransform X="0"/>
+                                                <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                            </TransformGroup>
+                                        </LinearGradientBrush.RelativeTransform>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                        BlurRadius="10"
+                                        ShadowDepth="0"
+                                        Opacity="0.6"/>
+                                </TextBlock.Effect>
+                                <TextBlock.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].(TranslateTransform.X)"
+                                                    From="0"
+                                                    To="1"
+                                                    Duration="0:0:1.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </TextBlock.Triggers>
+                            </TextBlock>
                             <TextBlock Text="{Binding Name}"
-                                       FontSize="16"
-                                       FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextBrush}"/>
+                                  FontSize="16"
+                                  FontWeight="SemiBold">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <TranslateTransform X="0"/>
+                                                <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                            </TransformGroup>
+                                        </LinearGradientBrush.RelativeTransform>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                       BlurRadius="10"
+                                       ShadowDepth="0"
+                                       Opacity="0.6"/>
+                                </TextBlock.Effect>
+                                <TextBlock.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].X"
+                                                    From="0"
+                                                    To="1"
+                                                    Duration="0:0:1.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </TextBlock.Triggers>
+                            </TextBlock>
                         </StackPanel>
                         <TextBlock Text="{Binding ExePath}"
                                    FontSize="10"
@@ -301,22 +529,18 @@
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Content="🌐"
-                                Style="{StaticResource IconButton}"
-                                Click="VisitWebsite_Click"
-                                Tag="{Binding}"
-                                ToolTip="Visit Website"
-                                Margin="0,0,5,0"/>
+                            Style="{StaticResource TabItemButton}"
+                            Click="VisitWebsite_Click"
+                            Tag="{Binding}"/>
                         <Button Content="▶"
-                                Click="LaunchLoader_Click"
-                                Tag="{Binding}"
-                                Padding="12,8"
-                                Margin="0,0,5,0"
-                                Background="{DynamicResource PrimaryBrush}"/>
+                            Style="{StaticResource TabItemButton}"
+                            Click="LaunchLoader_Click"
+                            Tag="{Binding}"/>
                         <Button Content="🗑"
-                                Style="{StaticResource DangerButton}"
-                                Click="DeleteLauncher_Click"
-                                Tag="{Binding}"
-                                Padding="10,8"/>
+                            Style="{StaticResource TabItemButton}"
+                            Click="DeleteLauncher_Click"
+                            Tag="{Binding}"
+                            Margin="0"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -325,12 +549,12 @@
         <!-- Steam Account Item Template -->
         <DataTemplate x:Key="SteamAccountItemTemplate">
             <Border Background="{DynamicResource SurfaceBrush}"
-        BorderThickness="0"
-        CornerRadius="8"
-        Padding="15"
-        Margin="0,0,0,10"
-        MouseDown="SteamAccount_MouseDown"
-        Cursor="Hand">
+                 BorderThickness="0"
+                 CornerRadius="8"
+                 Padding="15"
+                 Margin="0,0,0,10"
+                 MouseDown="SteamAccount_MouseDown"
+                 Cursor="Hand">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -368,17 +592,84 @@
                     <!-- Account Info -->
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="📌 "
-                            FontSize="12"
-                            Foreground="{DynamicResource PrimaryBrush}"
-                            Visibility="{Binding IsPinned, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Margin="0,0,5,0"/>
-                        <TextBlock Text="{Binding AccountName}"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource TextBrush}"/>
-                           
-                            </StackPanel>
+                            <TextBlock Text="📌 "
+                                FontSize="12"
+                                Visibility="{Binding IsPinned, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Margin="0,0,5,0">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <TranslateTransform X="0"/>
+                                                <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                            </TransformGroup>
+                                        </LinearGradientBrush.RelativeTransform>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                        BlurRadius="10"
+                                        ShadowDepth="0"
+                                        Opacity="0.6"/>
+                                </TextBlock.Effect>
+
+                                <TextBlock.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].(TranslateTransform.X)"
+                                                    From="0"
+                                                    To="1"
+                                                    Duration="0:0:1.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </TextBlock.Triggers>
+                            </TextBlock>
+
+                            <TextBlock Text="{Binding AccountName}"
+                                 FontSize="16"
+                                 FontWeight="SemiBold">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <TranslateTransform X="0"/>
+                                                <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                            </TransformGroup>
+                                        </LinearGradientBrush.RelativeTransform>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                          BlurRadius="10"
+                                          ShadowDepth="0"
+                                          Opacity="0.6"/>
+                                </TextBlock.Effect>
+                                <TextBlock.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation
+                                                     Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].X"
+                                                     From="0"
+                                                     To="1"
+                                                     Duration="0:0:1.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </TextBlock.Triggers>
+                            </TextBlock>
+
+                        </StackPanel>
                         <TextBlock Text="{Binding Username}"
                              FontSize="11"
                              Foreground="{DynamicResource SubTextBrush}"
@@ -400,38 +691,23 @@
                     </StackPanel>
                     <!-- Action Buttons -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <!-- Copy Username Button -->
                         <Button Content="👤"
-                                Style="{StaticResource IconButton}"
-                                Click="CopySteamUsername_Click"
-                                Tag="{Binding}"
-                                ToolTip="Copy Username"
-                                Margin="0,0,5,0"/>
-                        <!-- Copy Password Button -->
+                             Style="{StaticResource TabItemButton}"
+                             Click="CopySteamUsername_Click"
+                             Tag="{Binding}"/>
                         <Button Content="🔑"
-                                Style="{StaticResource IconButton}"
-                                Click="CopySteamPassword_Click"
-                                Tag="{Binding}"
-                                ToolTip="Copy Password"
-                                Margin="0,0,5,0"/>
-                        <!-- Switch Button -->
+                             Style="{StaticResource TabItemButton}"
+                             Click="CopySteamPassword_Click"
+                             Tag="{Binding}"/>
                         <Button Content="👾"
-                                Click="SwitchSteamAccount_Click"
-                                Tag="{Binding}"
-                                Padding="12,8"
-                                Margin="0,0,5,0"
-                                Background="{DynamicResource PrimaryBrush}"
-                                ToolTip="Switch to this account"
-                                FontSize="16"/>
-                        
-                        <!-- Delete Button -->
+                             Style="{StaticResource TabItemButton}"
+                             Click="SwitchSteamAccount_Click"
+                             Tag="{Binding}"/>
                         <Button Content="🗑"
-                                Style="{StaticResource DangerButton}"
-                                Click="DeleteSteamAccount_Click"
-                                Tag="{Binding}"
-                                Padding="10,8"
-                                ToolTip="Delete account"
-                                FontSize="16"/>
+                             Style="{StaticResource TabItemButton}"
+                             Click="DeleteSteamAccount_Click"
+                             Tag="{Binding}"
+                             Margin="0"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -575,18 +851,18 @@
 
             <!-- Title Bar -->
             <Border Grid.Row="0"
-        Background="#0F0F12"
-        CornerRadius="12,12,0,0"
-        MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                 Background="#0F0F12"
+                 CornerRadius="12,12,0,0"
+                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
 
                     <!-- Logo text with Eurostile Bold -->
                     <TextBlock Text="EXECOR"
-           FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
-           FontSize="24"
-           FontWeight="Bold"
-           VerticalAlignment="Center"
-           Margin="12,0,0,0">
+                         FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
+                         FontSize="24"
+                         FontWeight="Bold"
+                         VerticalAlignment="Center"
+                         Margin="12,0,0,0">
 
                         <TextBlock.Foreground>
                             <LinearGradientBrush x:Name="TitleGradient"
@@ -819,12 +1095,12 @@
                                             <DataTemplate>
                                                 <Border Background="{DynamicResource SurfaceBrush}"
                 
-                BorderThickness="0"
-                CornerRadius="8"
-                Padding="15"
-                Margin="0,0,0,10"
-                MouseDown="Password_MouseDown"
-                Cursor="Hand">
+                                                    BorderThickness="0"
+                                                    CornerRadius="8"
+                                                    Padding="15"
+                                                    Margin="0,0,0,10"
+                                                    MouseDown="Password_MouseDown"
+                                                    Cursor="Hand">
                                                     <Grid>
                                                         <!-- Two columns: Main content (text/buttons) | Icon -->
                                                         <Grid.ColumnDefinitions>
@@ -839,14 +1115,81 @@
                                                             <!-- Header with optional pin -->
                                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                                 <TextBlock Text="📌"
-                                   FontSize="14"
-                                   Foreground="{DynamicResource PrimaryBrush}"
-                                   Visibility="{Binding IsPinned, Converter={StaticResource BoolToVisibilityConverter}}"
-                                   Margin="0,0,6,0"/>
+                                                                    FontSize="14"
+                                                                    Visibility="{Binding IsPinned, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                                    Margin="0,0,6,0">
+                                                                    <TextBlock.Foreground>
+                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                                            <LinearGradientBrush.RelativeTransform>
+                                                                                <TransformGroup>
+                                                                                    <TranslateTransform X="0"/>
+                                                                                    <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                                                                </TransformGroup>
+                                                                            </LinearGradientBrush.RelativeTransform>
+                                                                        </LinearGradientBrush>
+                                                                    </TextBlock.Foreground>
+
+                                                                    <TextBlock.Effect>
+                                                                        <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                                                            BlurRadius="10"
+                                                                            ShadowDepth="0"
+                                                                            Opacity="0.6"/>
+                                                                    </TextBlock.Effect>
+
+                                                                    <TextBlock.Triggers>
+                                                                        <EventTrigger RoutedEvent="Loaded">
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard RepeatBehavior="Forever">
+                                                                                    <DoubleAnimation
+                                                                                        Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].(TranslateTransform.X)"
+                                                                                        From="0"
+                                                                                        To="1"
+                                                                                        Duration="0:0:1.2"/>
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </EventTrigger>
+                                                                    </TextBlock.Triggers>
+                                                                </TextBlock>
+
                                                                 <TextBlock Text="{Binding ServiceName}"
-                                   FontSize="16"
-                                   FontWeight="Bold"
-                                   Foreground="{DynamicResource TextBrush}"/>
+                                                                    FontSize="16"
+                                                                    FontWeight="Bold">
+                                                                    <TextBlock.Foreground>
+                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                                            <LinearGradientBrush.RelativeTransform>
+                                                                                <TransformGroup>
+                                                                                    <TranslateTransform X="0"/>
+                                                                                    <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                                                                </TransformGroup>
+                                                                            </LinearGradientBrush.RelativeTransform>
+                                                                        </LinearGradientBrush>
+                                                                    </TextBlock.Foreground>
+                                                                    <TextBlock.Effect>
+                                                                        <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                                                            BlurRadius="10"
+                                                                            ShadowDepth="0"
+                                                                            Opacity="0.6"/>
+                                                                    </TextBlock.Effect>
+                                                                    <TextBlock.Triggers>
+                                                                        <EventTrigger RoutedEvent="Loaded">
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard RepeatBehavior="Forever">
+                                                                                    <DoubleAnimation
+                                                                                        Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].X"
+                                                                                        From="0"
+                                                                                        To="1"
+                                                                                        Duration="0:0:1.2"/>
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </EventTrigger>
+                                                                    </TextBlock.Triggers>
+                                                                </TextBlock>
                                                             </StackPanel>
 
                                                             <!-- Username -->
@@ -856,12 +1199,12 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock Text="👤 Username:"
-                                   Foreground="{DynamicResource SubTextBrush}"
-                                   FontSize="12"/>
+                                                                    Foreground="{DynamicResource SubTextBrush}"
+                                                                    FontSize="12"/>
                                                                 <TextBlock Grid.Column="1"
-                                   Text="{Binding Username}"
-                                   Foreground="{DynamicResource TextBrush}"
-                                   FontSize="12"/>
+                                                                    Text="{Binding Username}"
+                                                                    Foreground="{DynamicResource TextBrush}"
+                                                                    FontSize="12"/>
                                                             </Grid>
 
                                                             <!-- Email -->
@@ -871,12 +1214,12 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock Text="📧 Email:"
-                                   Foreground="{DynamicResource SubTextBrush}"
-                                   FontSize="12"/>
+                                                                    Foreground="{DynamicResource SubTextBrush}"
+                                                                    FontSize="12"/>
                                                                 <TextBlock Grid.Column="1"
-                                   Text="{Binding Email}"
-                                   Foreground="{DynamicResource TextBrush}"
-                                   FontSize="12"/>
+                                                                    Text="{Binding Email}"
+                                                                    Foreground="{DynamicResource TextBrush}"
+                                                                    FontSize="12"/>
                                                             </Grid>
 
                                                             <!-- Password -->
@@ -886,41 +1229,44 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock Text="🔑 Password:"
-                                   Foreground="{DynamicResource SubTextBrush}"
-                                   FontSize="12"/>
+                                                                    Foreground="{DynamicResource SubTextBrush}"
+                                                                    FontSize="12"/>
                                                                 <TextBlock Grid.Column="1"
-                                   Text="••••••••"
-                                   Foreground="{DynamicResource TextBrush}"
-                                   FontSize="12"/>
+                                                                    Text="••••••••"
+                                                                    Foreground="{DynamicResource TextBrush}"
+                                                                    FontSize="12"/>
                                                             </Grid>
 
                                                             <!-- Buttons -->
                                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,4,0,0">
                                                                 <Button Content="📋 Copy"
-                                Click="CopyPassword_Click"
-                                Tag="{Binding}"
-                                Padding="12,8"
-                                Margin="0,0,8,0"/>
+                                                                    Style="{StaticResource PasswordButton}"
+                                                                    Click="CopyPassword_Click"
+                                                                    Tag="{Binding}"
+                                                                    Margin="0,0,8,0"/>
                                                                 <Button Content="🗑 Delete"
-                                Style="{StaticResource DangerButton}"
-                                Click="DeletePassword_Click"
-                                Tag="{Binding}"
-                                Padding="12,8"/>
+                                                                    Style="{StaticResource PasswordButton}"
+                                                                    Click="DeletePassword_Click"
+                                                                    Tag="{Binding}"
+                                                                    Margin="0"/>
                                                             </StackPanel>
+                                                            
+                                                            
+                                                            
                                                         </StackPanel>
 
                                                         <!-- Icon on the right side -->
                                                         <Border Grid.Column="1"
-                        Background="{DynamicResource SurfaceBrush}"
-                        BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="6"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Stretch"
-                        Visibility="{Binding IconBase64, Converter={StaticResource NullOrEmptyToVisibilityConverter}}">
+                                                            Background="{DynamicResource SurfaceBrush}"
+                                                            BorderBrush="{DynamicResource BackgroundBrush}"
+                                                            BorderThickness="3"
+                                                            CornerRadius="6"
+                                                            Margin="8,0,0,0"
+                                                            VerticalAlignment="Stretch"
+                                                            Visibility="{Binding IconBase64, Converter={StaticResource NullOrEmptyToVisibilityConverter}}">
                                                             <Image Source="{Binding IconBase64, Converter={StaticResource Base64ToImageConverter}}"
-                           Stretch="UniformToFill"
-                           Margin="3"/>
+                                                                Stretch="UniformToFill"
+                                                                Margin="3"/>
                                                         </Border>
                                                     </Grid>
                                                 </Border>
@@ -1057,20 +1403,20 @@
 
             <!-- Custom Resize Grip -->
             <Thumb x:Name="CustomResizeGrip"
-       Grid.Row="1"
-       HorizontalAlignment="Right"
-       VerticalAlignment="Bottom"
-       Width="16"
-       Height="16"
-       Cursor="SizeNWSE"
-       Margin="0,0,8,8"
-       DragDelta="CustomResizeGrip_DragDelta">
+                Grid.Row="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Width="16"
+                Height="16"
+                Cursor="SizeNWSE"
+                Margin="0,0,8,8"
+                DragDelta="CustomResizeGrip_DragDelta">
                 <Thumb.Template>
                     <ControlTemplate>
                         <Border Width="16"
-                    Height="16"
-                    CornerRadius="4"
-                    Padding="3">
+                            Height="16"
+                            CornerRadius="4"
+                            Padding="3">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0"
                                          EndPoint="1,1"
@@ -1116,7 +1462,6 @@
                     </ControlTemplate>
                 </Thumb.Template>
             </Thumb>
-
         </Grid>
     </Border>
 </Window>

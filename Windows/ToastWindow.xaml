@@ -26,7 +26,7 @@
     </Window.Resources>
 
     <!-- REMOVED colored border, kept clean background with shadow -->
-    <Border Background="{DynamicResource SurfaceBrush}" 
+    <Border Background="{DynamicResource BackgroundBrush}" 
             CornerRadius="8"
             Padding="15">
         <Border.Effect>
@@ -61,15 +61,47 @@
                 <!-- Message -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock x:Name="TitleText" 
-                               FontSize="14" 
-                               FontWeight="Bold" 
-                               Foreground="{DynamicResource TextBrush}"
-                               TextWrapping="Wrap"/>
+               FontSize="14" 
+               FontWeight="Bold"
+               TextWrapping="Wrap">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                              BlurRadius="10"
+                              ShadowDepth="0"
+                              Opacity="0.6"/>
+                        </TextBlock.Effect>
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                            Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].X"
+                            From="0"
+                            To="1"
+                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
                     <TextBlock x:Name="MessageText" 
-                               FontSize="12" 
-                               Foreground="{DynamicResource SubTextBrush}"
-                               TextWrapping="Wrap"
-                               Margin="0,2,0,0"/>
+               FontSize="12" 
+               Foreground="{DynamicResource SubTextBrush}"
+               TextWrapping="Wrap"
+               Margin="0,2,0,0"/>
                 </StackPanel>
 
                 <!-- Close Button -->
@@ -110,16 +142,65 @@
 
             <!-- Progress Bar (Optional) -->
             <ProgressBar x:Name="ProgressBar"
-                         Grid.Row="1"
-                         Height="4"
-                         Margin="0,8,0,0"
-                         Background="{DynamicResource BorderBrush}"
-                         Foreground="{DynamicResource PrimaryBrush}"
-                         BorderThickness="0"
-                         Minimum="0"
-                         Maximum="100"
-                         Value="0"
-                         Visibility="Collapsed"/>
+             Grid.Row="1"
+             Height="4"
+             Margin="0,8,0,0"
+             Background="{DynamicResource BorderBrush}"
+             BorderThickness="0"
+             Minimum="0"
+             Maximum="100"
+             Value="0"
+             Visibility="Collapsed">
+                <ProgressBar.Style>
+                    <Style TargetType="ProgressBar">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ProgressBar">
+                                    <Grid>
+                                        <!-- Background -->
+                                        <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="2"/>
+                                        <!-- Foreground (Progress) -->
+                                        <Border x:Name="PART_Track"
+                                    CornerRadius="2">
+                                            <Border x:Name="PART_Indicator"
+                                        HorizontalAlignment="Left"
+                                        CornerRadius="2">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                        <LinearGradientBrush.RelativeTransform>
+                                                            <TransformGroup>
+                                                                <TranslateTransform X="0"/>
+                                                                <RotateTransform Angle="40" CenterX="0.5" CenterY="0.5"/>
+                                                            </TransformGroup>
+                                                        </LinearGradientBrush.RelativeTransform>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <Border.Triggers>
+                                                    <EventTrigger RoutedEvent="Loaded">
+                                                        <BeginStoryboard>
+                                                            <Storyboard RepeatBehavior="Forever">
+                                                                <DoubleAnimation
+                                                        Storyboard.TargetProperty="(Border.Background).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].(TranslateTransform.X)"
+                                                        From="0"
+                                                        To="1"
+                                                        Duration="0:0:1.2"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                </Border.Triggers>
+                                            </Border>
+                                        </Border>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ProgressBar.Style>
+            </ProgressBar>
         </Grid>
     </Border>
 </Window>
