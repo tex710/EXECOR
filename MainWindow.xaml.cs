@@ -19,23 +19,16 @@ using System.Windows.Threading;
 
 namespace HackHelper
 {
-
-
     public class EmptyStringToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is string str && !string.IsNullOrWhiteSpace(str))
-            {
-                return Visibility.Collapsed; // Has icon, hide default
-            }
-            return Visibility.Visible; // No icon, show default
+                return Visibility.Collapsed;
+            return Visibility.Visible;
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 
     public partial class MainWindow : Window
@@ -46,7 +39,6 @@ namespace HackHelper
         private Settings settings;
         private DispatcherTimer clipboardTimer;
 
-        // NEW: Steam Account Manager
         private SteamAccountManager steamAccountManager;
         private List<SteamAccount> steamAccounts;
 
@@ -61,11 +53,7 @@ namespace HackHelper
             dataService = new DataService();
             steamAccountManager = new SteamAccountManager();
             LoadData();
-
-            // Apply saved theme
             ThemeManager.ApplyTheme(settings.SelectedTheme);
-
-            // Setup render transform for animations
             this.RenderTransform = new ScaleTransform(1.0, 1.0);
             this.RenderTransformOrigin = new Point(0.5, 0.5);
         }
@@ -82,226 +70,86 @@ namespace HackHelper
             RefreshSteamAccountsList();
         }
 
+        #region Refresh Lists
         private void RefreshLaunchersList(string searchQuery = "")
         {
-            var filteredLaunchers = launchers.AsEnumerable();
-
+            var q = launchers.AsEnumerable();
             if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                filteredLaunchers = filteredLaunchers.Where(l =>
-                    l.Name.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    l.ExePath.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0
-                );
-            }
+                q = q.Where(l => l.Name.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                 l.ExePath.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0);
+            q = q.OrderByDescending(l => l.IsPinned).ThenBy(l => l.Name);
 
-            // Sort by pinned status first, then by name
-            filteredLaunchers = filteredLaunchers.OrderByDescending(l => l.IsPinned).ThenBy(l => l.Name);
-
-            var cs2Launchers = filteredLaunchers.Where(l => l.GameType == "CS2").ToList();
-            var csgoLaunchers = filteredLaunchers.Where(l => l.GameType == "CSGO").ToList();
-            var otherLaunchers = filteredLaunchers.Where(l => l.GameType == "Other").ToList();
-
-            CS2ListBox.ItemsSource = null;
-            CS2ListBox.ItemsSource = cs2Launchers;
-
-            CSGOListBox.ItemsSource = null;
-            CSGOListBox.ItemsSource = csgoLaunchers;
-
-            OtherListBox.ItemsSource = null;
-            OtherListBox.ItemsSource = otherLaunchers;
+            CS2ListBox.ItemsSource = q.Where(l => l.GameType == "CS2").ToList();
+            CSGOListBox.ItemsSource = q.Where(l => l.GameType == "CSGO").ToList();
+            OtherListBox.ItemsSource = q.Where(l => l.GameType == "Other").ToList();
         }
 
         private void RefreshPasswordsList(string searchQuery = "")
         {
-            var filteredPasswords = passwords.AsEnumerable();
-
+            var q = passwords.AsEnumerable();
             if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                filteredPasswords = filteredPasswords.Where(p =>
-                    p.ServiceName.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    p.Username.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    p.Email.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0
-                );
-            }
+                q = q.Where(p => p.ServiceName.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                 p.Username.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                 p.Email.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0);
+            q = q.OrderByDescending(p => p.IsPinned).ThenBy(p => p.ServiceName);
 
-            PasswordsListBox.ItemsSource = null;
-            PasswordsListBox.ItemsSource = filteredPasswords.ToList();
+            PasswordsListBox.ItemsSource = q.ToList();
         }
 
-        // NEW: Refresh Steam Accounts List
         private void RefreshSteamAccountsList(string searchQuery = "")
         {
-            var filteredAccounts = steamAccounts.AsEnumerable();
-
+            var q = steamAccounts.AsEnumerable();
             if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                filteredAccounts = filteredAccounts.Where(a =>
-                    a.AccountName.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    a.Username.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0
-                );
-            }
+                q = q.Where(a => a.AccountName.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                 a.Username.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0);
+            q = q.OrderByDescending(a => a.IsPinned).ThenBy(a => a.AccountName);
 
-            SteamAccountsListBox.ItemsSource = null;
-            SteamAccountsListBox.ItemsSource = filteredAccounts.ToList();
+            SteamAccountsListBox.ItemsSource = q.ToList();
         }
+        #endregion
 
-        // SEARCH HANDLERS
+        #region Search Boxes
         private void LauncherSearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            RefreshLaunchersList(LauncherSearchBox.Text);
-        }
+            => RefreshLaunchersList(LauncherSearchBox.Text);
 
         private void PasswordSearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            RefreshPasswordsList(PasswordSearchBox.Text);
-        }
+            => RefreshPasswordsList(PasswordSearchBox.Text);
 
-        // NEW: Steam Account Search Handler
         private void SteamAccountSearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            RefreshSteamAccountsList(SteamAccountSearchBox.Text);
-        }
+            => RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+        #endregion
 
-        // SELECTION TRACKING
+        #region Selection
         private void Loader_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Border border && border.DataContext is Launcher launcher)
+            if ((sender as Border)?.DataContext is Launcher l)
             {
-                selectedLauncher = launcher;
-                selectedPassword = null;
-                selectedSteamAccount = null;
+                selectedLauncher = l; selectedPassword = null; selectedSteamAccount = null;
                 UpdateEditButtons();
             }
         }
 
         private void Password_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Border border && border.DataContext is PasswordEntry password)
+            if ((sender as Border)?.DataContext is PasswordEntry p)
             {
-                selectedPassword = password;
-                selectedLauncher = null;
-                selectedSteamAccount = null;
+                selectedPassword = p; selectedLauncher = null; selectedSteamAccount = null;
                 UpdateEditButtons();
             }
         }
 
-        // NEW: Steam Account Selection
         private void SteamAccount_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Border border && border.DataContext is SteamAccount account)
+            if ((sender as Border)?.DataContext is SteamAccount a)
             {
-                selectedSteamAccount = account;
-                selectedLauncher = null;
-                selectedPassword = null;
+                selectedSteamAccount = a; selectedLauncher = null; selectedPassword = null;
                 UpdateEditButtons();
             }
         }
+        #endregion
 
-        // Update button states based on selection
-        private void UpdateEditButtons()
-        {
-            if (selectedLauncher != null)
-            {
-                EditButton.IsEnabled = true;
-                PinLoaderButton.IsEnabled = true;
-                PinLoaderButton.Content = selectedLauncher.IsPinned ? "📌 Unpin" : "📌 Pin";
-            }
-            else if (selectedPassword != null)
-            {
-                EditButton.IsEnabled = true;
-                PinLoaderButton.IsEnabled = false;
-            }
-            else if (selectedSteamAccount != null)
-            {
-                EditButton.IsEnabled = true;
-                PinLoaderButton.IsEnabled = false;
-            }
-            else
-            {
-                EditButton.IsEnabled = false;
-                PinLoaderButton.IsEnabled = false;
-            }
-        }
-
-        // Unified Edit button handler
-        private void Edit_Click(object sender, RoutedEventArgs e)
-        {
-            if (selectedLauncher != null)
-            {
-                EditLauncher(selectedLauncher);
-            }
-            else if (selectedPassword != null)
-            {
-                EditPasswordEntry(selectedPassword);
-            }
-            else if (selectedSteamAccount != null)
-            {
-                EditSteamAccount(selectedSteamAccount);
-            }
-        }
-
-        // Edit Launcher
-        private void EditLauncher(Launcher launcher)
-        {
-            var dialog = new AddLauncherDialog(launcher)
-            {
-                Owner = this
-            };
-
-            if (dialog.ShowDialog() == true && dialog.NewLauncher != null)
-            {
-                dataService.UpdateLauncher(dialog.NewLauncher);
-                launchers = dataService.LoadLaunchers();
-                RefreshLaunchersList(LauncherSearchBox.Text);
-                selectedLauncher = null;
-                UpdateEditButtons();
-
-                ToastService.Success($"{dialog.NewLauncher.Name} updated", "Changes saved");
-            }
-        }
-
-        // Edit Password
-        private void EditPasswordEntry(PasswordEntry password)
-        {
-            var dialog = new AddPasswordDialog(password)
-            {
-                Owner = this
-            };
-
-            if (dialog.ShowDialog() == true && dialog.NewPassword != null)
-            {
-                dataService.UpdatePassword(dialog.NewPassword);
-                passwords = dataService.LoadPasswords();
-                RefreshPasswordsList(PasswordSearchBox.Text);
-                selectedPassword = null;
-                UpdateEditButtons();
-
-                ToastService.Success($"{dialog.NewPassword.ServiceName} updated", "Password updated");
-            }
-        }
-
-        // NEW: Edit Steam Account
-        private void EditSteamAccount(SteamAccount account)
-        {
-            var dialog = new AddSteamAccountWindow(account)
-            {
-                Owner = this
-            };
-
-            if (dialog.ShowDialog() == true && dialog.NewAccount != null)
-            {
-                steamAccountManager.UpdateAccount(dialog.NewAccount);
-                steamAccounts = steamAccountManager.GetAllAccounts();
-                RefreshSteamAccountsList(SteamAccountSearchBox.Text);
-                selectedSteamAccount = null;
-                UpdateEditButtons();
-
-                ToastService.Success($"{dialog.NewAccount.AccountName} updated", "Account updated");
-            }
-        }
-
-        // Pin/Unpin Loader
-        private void PinLoader_Click(object sender, RoutedEventArgs e)
+        #region Pin / Unpin  (UNIFIED)
+        private void PinItem_Click(object sender, RoutedEventArgs e)
         {
             if (selectedLauncher != null)
             {
@@ -309,479 +157,282 @@ namespace HackHelper
                 launchers = dataService.LoadLaunchers();
                 RefreshLaunchersList(LauncherSearchBox.Text);
 
-                string message = selectedLauncher.IsPinned ? "unpinned" : "pinned";
-                ToastService.Info($"{selectedLauncher.Name} {message}", "Pin status updated");
-
-                selectedLauncher = null;
-                UpdateEditButtons();
+                var updated = launchers.First(l => l.Id == selectedLauncher.Id);
+                ToastService.Info($"{updated.Name} {(updated.IsPinned ? "pinned" : "unpinned")}", "Pin status updated");
             }
-        }
-
-        private void ApplyStartupSetting()
-        {
-            string appName = "LauncherLoader";
-            string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe");
-
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
+            else if (selectedPassword != null)
             {
-                if (settings.LaunchOnStartup)
-                {
-                    key.SetValue(appName, appPath);
-                }
-                else
-                {
-                    if (key.GetValue(appName) != null)
-                    {
-                        key.DeleteValue(appName);
-                    }
-                }
+                dataService.TogglePasswordPin(selectedPassword.Id);
+                passwords = dataService.LoadPasswords();
+                RefreshPasswordsList(PasswordSearchBox.Text);
+
+                var updated = passwords.First(p => p.Id == selectedPassword.Id);
+                ToastService.Info($"{updated.ServiceName} {(updated.IsPinned ? "pinned" : "unpinned")}", "Pin status updated");
+            }
+            else if (selectedSteamAccount != null)
+            {
+                steamAccountManager.TogglePin(selectedSteamAccount.Id);
+                steamAccounts = steamAccountManager.GetAllAccounts();
+                RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+
+                var updated = steamAccounts.First(a => a.Id == selectedSteamAccount.Id);
+                ToastService.Info($"{updated.AccountName} {(updated.IsPinned ? "pinned" : "unpinned")}", "Pin status updated");
+            }
+
+            ClearSelection();
+        }
+        #endregion
+
+        #region Buttons
+        private void UpdateEditButtons()
+        {
+            bool anything = selectedLauncher != null || selectedPassword != null || selectedSteamAccount != null;
+            EditButton.IsEnabled = anything;
+            PinLoaderButton.IsEnabled = anything;
+
+            if (selectedLauncher != null)
+                PinLoaderButton.Content = selectedLauncher.IsPinned ? "📌 Unpin" : "📌 Pin";
+            else if (selectedPassword != null)
+                PinLoaderButton.Content = selectedPassword.IsPinned ? "📌 Unpin" : "📌 Pin";
+            else if (selectedSteamAccount != null)
+                PinLoaderButton.Content = selectedSteamAccount.IsPinned ? "📌 Unpin" : "📌 Pin";
+            else
+                PinLoaderButton.Content = "📌 Pin";
+        }
+
+        private void ClearSelection()
+        {
+            selectedLauncher = null; selectedPassword = null; selectedSteamAccount = null;
+            UpdateEditButtons();
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedLauncher != null) EditLauncher(selectedLauncher);
+            else if (selectedPassword != null) EditPasswordEntry(selectedPassword);
+            else if (selectedSteamAccount != null) EditSteamAccount(selectedSteamAccount);
+        }
+        #endregion
+
+        #region Edit Helpers
+        private void EditLauncher(Launcher l)
+        {
+            var d = new AddLauncherDialog(l) { Owner = this };
+            if (d.ShowDialog() == true && d.NewLauncher != null)
+            {
+                dataService.UpdateLauncher(d.NewLauncher);
+                launchers = dataService.LoadLaunchers();
+                RefreshLaunchersList(LauncherSearchBox.Text);
+                ClearSelection();
+                ToastService.Success($"{d.NewLauncher.Name} updated", "Changes saved");
             }
         }
 
+        private void EditPasswordEntry(PasswordEntry p)
+        {
+            var d = new AddPasswordDialog(p) { Owner = this };
+            if (d.ShowDialog() == true && d.NewPassword != null)
+            {
+                dataService.UpdatePassword(d.NewPassword);
+                passwords = dataService.LoadPasswords();
+                RefreshPasswordsList(PasswordSearchBox.Text);
+                ClearSelection();
+                ToastService.Success($"{d.NewPassword.ServiceName} updated", "Password updated");
+            }
+        }
+
+        private void EditSteamAccount(SteamAccount a)
+        {
+            var d = new AddSteamAccountWindow(a) { Owner = this };
+            if (d.ShowDialog() == true && d.NewAccount != null)
+            {
+                steamAccountManager.UpdateAccount(d.NewAccount);
+                steamAccounts = steamAccountManager.GetAllAccounts();
+                RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+                ClearSelection();
+                ToastService.Success($"{d.NewAccount.AccountName} updated", "Account updated");
+            }
+        }
+        #endregion
+
+        #region Clipboard
         private void StartClipboardClearTimer()
         {
             if (!settings.ClipboardAutoClear) return;
-
             clipboardTimer?.Stop();
-            clipboardTimer = new DispatcherTimer();
-            clipboardTimer.Interval = TimeSpan.FromSeconds(settings.ClipboardTimeout);
-            clipboardTimer.Tick += (s, e) =>
-            {
-                Clipboard.Clear();
-                clipboardTimer.Stop();
-            };
+            clipboardTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(settings.ClipboardTimeout) };
+            clipboardTimer.Tick += (_, __) => { Clipboard.Clear(); clipboardTimer.Stop(); };
             clipboardTimer.Start();
         }
+        #endregion
 
-        // ANIMATION METHODS
+        #region Window Controls
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2) MaximizeButton_Click(sender, null);
+            else this.DragMove();
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e) => AnimateMinimize();
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e) =>
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e) => AnimateClose();
+
+        private void CustomResizeGrip_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            Width = Math.Max(MinWidth, Width + e.HorizontalChange);
+            Height = Math.Max(MinHeight, Height + e.VerticalChange);
+        }
+        #endregion
+
+        #region Animations
         private void AnimateMinimize()
         {
-            var scaleDown = new DoubleAnimation
+            var anim = new DoubleAnimation(1.0, 0.01, TimeSpan.FromMilliseconds(150))
+            { EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn } };
+            anim.Completed += (_, __) =>
             {
-                From = 1.0,
-                To = 0.01,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+                var t = (ScaleTransform)RenderTransform;
+                t.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+                t.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+                t.ScaleX = t.ScaleY = 1.0;
+                WindowState = WindowState.Minimized;
             };
-
-            scaleDown.Completed += (s, e) =>
-            {
-                var transform = (ScaleTransform)this.RenderTransform;
-
-                transform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
-                transform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-
-                transform.ScaleX = 1.0;
-                transform.ScaleY = 1.0;
-
-                this.WindowState = WindowState.Minimized;
-            };
-
-            ((ScaleTransform)this.RenderTransform).BeginAnimation(ScaleTransform.ScaleXProperty, scaleDown);
-            ((ScaleTransform)this.RenderTransform).BeginAnimation(ScaleTransform.ScaleYProperty, scaleDown);
+            ((ScaleTransform)RenderTransform).BeginAnimation(ScaleTransform.ScaleXProperty, anim);
+            ((ScaleTransform)RenderTransform).BeginAnimation(ScaleTransform.ScaleYProperty, anim);
         }
 
         private void AnimateClose()
         {
-            var scaleDown = new DoubleAnimation
-            {
-                From = 1.0,
-                To = 0.01,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
-            };
-
-            scaleDown.Completed += (s, e) =>
-            {
-                var transform = (ScaleTransform)this.RenderTransform;
-                transform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
-                transform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-
-                Application.Current.Shutdown();
-            };
-
-            ((ScaleTransform)this.RenderTransform).BeginAnimation(ScaleTransform.ScaleXProperty, scaleDown);
-            ((ScaleTransform)this.RenderTransform).BeginAnimation(ScaleTransform.ScaleYProperty, scaleDown);
+            var anim = new DoubleAnimation(1.0, 0.01, TimeSpan.FromMilliseconds(200))
+            { EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn } };
+            anim.Completed += (_, __) => Application.Current.Shutdown();
+            ((ScaleTransform)RenderTransform).BeginAnimation(ScaleTransform.ScaleXProperty, anim);
+            ((ScaleTransform)RenderTransform).BeginAnimation(ScaleTransform.ScaleYProperty, anim);
         }
+        #endregion
 
-        // LAUNCHER METHODS
+        #region Add / Launch / Delete Buttons (unchanged)
         private void AddLauncher_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new AddLauncherDialog();
-            if (dialog.ShowDialog() == true)
-            {
-                launchers.Add(dialog.NewLauncher);
-                dataService.SaveLaunchers(launchers);
-                RefreshLaunchersList(LauncherSearchBox.Text);
-
-                ToastService.Success($"{dialog.NewLauncher.Name} added", "Loader added to library");
-            }
+            var d = new AddLauncherDialog { Owner = this };
+            if (d.ShowDialog() == true) { launchers.Add(d.NewLauncher); dataService.SaveLaunchers(launchers); RefreshLaunchersList(); ToastService.Success($"{d.NewLauncher.Name} added", "Loader added"); }
         }
-
         private void LaunchLoader_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var launcher = button?.Tag as Launcher;
-
-            if (launcher != null)
+            if ((sender as Button)?.Tag is Launcher l)
             {
                 try
                 {
-                    launcher.LaunchCount++;
-
-                    if (launcher.LaunchHistory == null)
-                        launcher.LaunchHistory = new List<DateTime>();
-
-                    launcher.LaunchHistory.Add(DateTime.Now);
-
+                    l.LaunchCount++;
+                    l.LaunchHistory ??= new List<DateTime>();
+                    l.LaunchHistory.Add(DateTime.Now);
                     dataService.SaveLaunchers(launchers);
-                    RefreshLaunchersList(LauncherSearchBox.Text);
-
-                    Process.Start(new ProcessStartInfo
-                    {
-                        FileName = launcher.ExePath,
-                        UseShellExecute = true
-                    });
-
-                    ToastService.Success($"{launcher.Name} launched", "Started successfully");
+                    RefreshLaunchersList();
+                    Process.Start(new ProcessStartInfo { FileName = l.ExePath, UseShellExecute = true });
+                    ToastService.Success($"{l.Name} launched", "Started");
                 }
-                catch (Exception ex)
-                {
-                    ToastService.Error("Launch failed", ex.Message);
-                }
+                catch (Exception ex) { ToastService.Error("Launch failed", ex.Message); }
             }
         }
-
         private void VisitWebsite_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var launcher = button?.Tag as Launcher;
-
-            if (launcher != null && !string.IsNullOrWhiteSpace(launcher.Website))
+            if ((sender as Button)?.Tag is Launcher l && !string.IsNullOrWhiteSpace(l.Website))
             {
                 try
                 {
-                    string url = launcher.Website;
-                    if (!url.StartsWith("http://") && !url.StartsWith("https://"))
-                    {
-                        url = "https://" + url;
-                    }
-
-                    Process.Start(new ProcessStartInfo
-                    {
-                        FileName = url,
-                        UseShellExecute = true
-                    });
-
-                    ToastService.Info("Opening website", $"Launching {launcher.Name} website");
+                    var url = l.Website.StartsWith("http") ? l.Website : "https://" + l.Website;
+                    Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+                    ToastService.Info("Opening website", $"{l.Name} website");
                 }
-                catch (Exception ex)
-                {
-                    ToastService.Error("Website error", ex.Message);
-                }
+                catch (Exception ex) { ToastService.Error("Website error", ex.Message); }
             }
         }
-
         private void DeleteLauncher_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var launcher = button?.Tag as Launcher;
-
-            if (launcher != null)
+            if ((sender as Button)?.Tag is Launcher l && MessageBox.Show($"Delete '{l.Name}'?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                var result = MessageBox.Show($"Delete '{launcher.Name}'?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    launchers.Remove(launcher);
-                    dataService.SaveLaunchers(launchers);
-                    RefreshLaunchersList(LauncherSearchBox.Text);
-
-                    ToastService.Warning($"{launcher.Name} deleted", "Removed from library");
-                }
+                launchers.Remove(l); dataService.SaveLaunchers(launchers); RefreshLaunchersList();
+                ToastService.Warning($"{l.Name} deleted", "Removed");
             }
         }
-
-        // PASSWORD METHODS
         private void AddPassword_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new AddPasswordDialog();
-            if (dialog.ShowDialog() == true)
-            {
-                passwords.Add(dialog.NewPassword);
-                dataService.SavePasswords(passwords);
-                RefreshPasswordsList(PasswordSearchBox.Text);
-
-                ToastService.Success($"{dialog.NewPassword.ServiceName} added", "Password saved securely");
-            }
+            var d = new AddPasswordDialog { Owner = this };
+            if (d.ShowDialog() == true) { passwords.Add(d.NewPassword); dataService.SavePasswords(passwords); RefreshPasswordsList(); ToastService.Success($"{d.NewPassword.ServiceName} added", "Password saved"); }
         }
-
         private void CopyPassword_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var password = button?.Tag as PasswordEntry;
-
-            if (password != null)
+            if ((sender as Button)?.Tag is PasswordEntry p)
             {
-                Clipboard.SetText(password.Password);
-                StartClipboardClearTimer();
-
-                if (settings.ClipboardAutoClear)
-                {
-                    ToastService.Show(
-                        "Password copied",
-                        $"Clearing in {settings.ClipboardTimeout} seconds...",
-                        ToastType.Info,
-                        settings.ClipboardTimeout,
-                        showProgress: true
-                    );
-                }
-                else
-                {
-                    ToastService.Success("Password copied", "Ready to paste");
-                }
+                Clipboard.SetText(p.Password); StartClipboardClearTimer();
+                ToastService.Show("Password copied", settings.ClipboardAutoClear ? $"Clearing in {settings.ClipboardTimeout}s…" : "Ready to paste",
+                                  ToastType.Info, settings.ClipboardAutoClear ? settings.ClipboardTimeout : 2, showProgress: settings.ClipboardAutoClear);
             }
         }
-
         private void DeletePassword_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var password = button?.Tag as PasswordEntry;
-
-            if (password != null)
+            if ((sender as Button)?.Tag is PasswordEntry p && MessageBox.Show($"Delete password for '{p.ServiceName}'?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                var result = MessageBox.Show($"Delete password for '{password.ServiceName}'?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    passwords.Remove(password);
-                    dataService.SavePasswords(passwords);
-                    RefreshPasswordsList(PasswordSearchBox.Text);
-
-                    ToastService.Warning($"{password.ServiceName} deleted", "Password removed");
-                }
+                passwords.Remove(p); dataService.SavePasswords(passwords); RefreshPasswordsList();
+                ToastService.Warning($"{p.ServiceName} deleted", "Password removed");
             }
         }
-
-        // NEW: STEAM ACCOUNT METHODS
         private void AddSteamAccount_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new AddSteamAccountWindow
-            {
-                Owner = this
-            };
-
-            if (dialog.ShowDialog() == true && dialog.NewAccount != null)
-            {
-                try
-                {
-                    steamAccountManager.AddAccount(dialog.NewAccount);
-                    steamAccounts = steamAccountManager.GetAllAccounts();
-                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
-
-                    ToastService.Success($"{dialog.NewAccount.AccountName} added", "Steam account saved");
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ToastService.Error("Account exists", ex.Message);
-                }
-            }
+            var d = new AddSteamAccountWindow { Owner = this };
+            if (d.ShowDialog() == true) { steamAccountManager.AddAccount(d.NewAccount); steamAccounts = steamAccountManager.GetAllAccounts(); RefreshSteamAccountsList(); ToastService.Success($"{d.NewAccount.AccountName} added", "Account saved"); }
         }
-
         private void CopySteamUsername_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var account = button?.Tag as SteamAccount;
-
-            if (account != null)
-            {
-                try
-                {
-                    Clipboard.SetText(account.Username);
-
-                    // Visual feedback - change button content temporarily
-                    var originalContent = button.Content;
-                    button.Content = "✓";
-
-                    Task.Delay(1000).ContinueWith(_ =>
-                    {
-                        Dispatcher.Invoke(() => button.Content = originalContent);
-                    });
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to copy username: {ex.Message}", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            if ((sender as Button)?.Tag is SteamAccount a) { Clipboard.SetText(a.Username); TempButtonCheck(sender as Button); }
         }
-
         private void CopySteamPassword_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var account = button?.Tag as SteamAccount;
-
-            if (account != null)
+            if ((sender as Button)?.Tag is SteamAccount a)
             {
-                if (string.IsNullOrEmpty(account.Password))
-                {
-                    MessageBox.Show("No password saved for this account.", "No Password",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
-
-                try
-                {
-                    Clipboard.SetText(account.Password);
-
-                    // Visual feedback - change button content temporarily
-                    var originalContent = button.Content;
-                    button.Content = "✓";
-
-                    Task.Delay(1000).ContinueWith(_ =>
-                    {
-                        Dispatcher.Invoke(() => button.Content = originalContent);
-                    });
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to copy password: {ex.Message}", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                if (string.IsNullOrEmpty(a.Password)) { MessageBox.Show("No password saved.", "No Password", MessageBoxButton.OK, MessageBoxImage.Information); return; }
+                Clipboard.SetText(a.Password); TempButtonCheck(sender as Button);
             }
         }
-
         private async void SwitchSteamAccount_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var account = button?.Tag as SteamAccount;
-
-            if (account != null)
+            if ((sender as Button)?.Tag is SteamAccount a)
             {
-                try
-                {
-                    // Disable button during operation
-                    button.IsEnabled = false;
-
-                    ToastService.Info("Switching account...", "Please wait");
-
-                    // Run the switch operation on a background thread
-                    await System.Threading.Tasks.Task.Run(() =>
-                    {
-                        SteamRegistryManager.PerformFullAccountSwitch(
-                            account.Username,
-                            account.Password,
-                            launchSteam: true
-                        );
-                    });
-
-                    steamAccountManager.RecordAccountUsage(account.Id);
-                    steamAccounts = steamAccountManager.GetAllAccounts();
-                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
-
-                    ToastService.Success($"Switched to {account.AccountName}", "Steam is launching with this account");
-                }
-                catch (Exception ex)
-                {
-                    ToastService.Error("Switch failed", ex.Message);
-                }
-                finally
-                {
-                    // Re-enable button
-                    button.IsEnabled = true;
-                }
+                var btn = sender as Button; btn.IsEnabled = false;
+                ToastService.Info("Switching account…", "Please wait");
+                await Task.Run(() => SteamRegistryManager.PerformFullAccountSwitch(a.Username, a.Password, launchSteam: true));
+                steamAccountManager.RecordAccountUsage(a.Id);
+                steamAccounts = steamAccountManager.GetAllAccounts(); RefreshSteamAccountsList();
+                ToastService.Success($"Switched to {a.AccountName}", "Steam is launching");
+                btn.IsEnabled = true;
             }
         }
-
         private void DeleteSteamAccount_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
-            var account = button?.Tag as SteamAccount;
-
-            if (account != null)
+            if ((sender as Button)?.Tag is SteamAccount a && MessageBox.Show($"Delete Steam account '{a.AccountName}'?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                var result = MessageBox.Show(
-                    $"Delete Steam account '{account.AccountName}'?",
-                    "Confirm Delete",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question
-                );
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    steamAccountManager.DeleteAccount(account.Id);
-                    steamAccounts = steamAccountManager.GetAllAccounts();
-                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
-
-                    ToastService.Warning($"{account.AccountName} deleted", "Account removed");
-                }
+                steamAccountManager.DeleteAccount(a.Id); steamAccounts = steamAccountManager.GetAllAccounts(); RefreshSteamAccountsList();
+                ToastService.Warning($"{a.AccountName} deleted", "Account removed");
             }
         }
+        #endregion
 
-        private void Settings_Click(object sender, RoutedEventArgs e)
+        #region Misc Buttons
+        private void Settings_Click(object sender, RoutedEventArgs e) => new SettingsWindow { Owner = this }.ShowDialog();
+        private void Statistics_Click(object sender, RoutedEventArgs e) => new StatisticsWindow(launchers) { Owner = this }.ShowDialog();
+        private void ThemeEditor_Click(object sender, RoutedEventArgs e) => new ThemeEditorWindow { Owner = this }.ShowDialog();
+        #endregion
+
+        #region Helper
+        private async void TempButtonCheck(Button btn)
         {
-            var settingsWindow = new SettingsWindow
-            {
-                Owner = this
-            };
-            settingsWindow.ShowDialog();
-
-            settings = dataService.LoadSettings();
+            var orig = btn.Content; btn.Content = "✓";
+            await Task.Delay(1000);
+            btn.Content = orig;
         }
-
-        private void Statistics_Click(object sender, RoutedEventArgs e)
-        {
-            var statisticsWindow = new StatisticsWindow(launchers)
-            {
-                Owner = this
-            };
-            statisticsWindow.ShowDialog();
-        }
-
-        private void ThemeEditor_Click(object sender, RoutedEventArgs e)
-        {
-            var themeEditorWindow = new ThemeEditorWindow
-            {
-                Owner = this
-            };
-            themeEditorWindow.ShowDialog();
-        }
-
-        // WINDOW CONTROL METHODS
-        private void TitleBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (e.ClickCount == 2)
-            {
-                MaximizeButton_Click(sender, null);
-            }
-            else
-            {
-                this.DragMove();
-            }
-        }
-
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            AnimateMinimize();
-        }
-
-        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = this.WindowState == WindowState.Maximized
-        ? WindowState.Normal
-        : WindowState.Maximized;
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            AnimateClose();
-        }
-
-        private void CustomResizeGrip_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
-        {
-            double newWidth = this.ActualWidth + e.HorizontalChange;
-            double newHeight = this.ActualHeight + e.VerticalChange;
-
-            this.Width = Math.Max(this.MinWidth, newWidth);
-            this.Height = Math.Max(this.MinHeight, newHeight);
-        }
+        #endregion
     }
 }

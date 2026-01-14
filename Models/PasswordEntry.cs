@@ -13,6 +13,7 @@ namespace HackHelper.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public bool IsPinned { get; set; }
         public string Notes { get; set; }
         public string IconBase64 { get; set; }
 

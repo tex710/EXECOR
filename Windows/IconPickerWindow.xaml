@@ -10,6 +10,18 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
+        <!--========  GLOBAL FONT  ========-->
+        <Style TargetType="TextElement">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <Style TargetType="Control">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+        </Style>
+        <!--================================-->
+
         <!-- Window Control Buttons -->
         <Style x:Key="WindowButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -22,7 +34,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -32,20 +44,59 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
                 </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource WindowButton}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- Button Style -->
+        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource WindowButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource SecondaryBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Button Styles -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Cancel Button Style -->
+        <Style x:Key="CancelButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="20,10"/>
@@ -98,19 +149,66 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="12" BorderThickness="1" BorderBrush="{DynamicResource PrimaryBrush}">
+    <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Title Bar -->
+            <!-- Title Bar with Gradient -->
             <Border Grid.Row="0" Background="#0F0F12" CornerRadius="12,12,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
-                    <TextBlock Text="🎨" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}" VerticalAlignment="Center" Margin="15,0,0,0"/>
+                    <TextBlock x:Name="TitleTextBlock" 
+                               Text="🎨 CHOOSE ICON"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center" 
+                               Margin="15,0,0,0">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="TitleGradient"
+                                                 StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="GradientTranslate" X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.8"/>
+                        </TextBlock.Effect>
+
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="GradientTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
-                        <Button Content="x" Style="{StaticResource CloseButton}" Click="Cancel_Click" Height="33"/>
+                        <Button Style="{StaticResource CloseButton}" Click="Cancel_Click">
+                            <TextBlock Text="🗙" FontSize="16" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -118,33 +216,20 @@
             <!-- Content -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20">
                 <StackPanel>
-                    <!-- Emoji Picker Section -->
                     <TextBlock Text="Popular Icons" 
                                FontSize="16" 
                                FontWeight="Bold" 
                                Foreground="{DynamicResource TextBrush}" 
                                Margin="0,0,0,15"/>
-
-                    <WrapPanel x:Name="EmojiPanel" Margin="0,0,0,20">
-                        <!-- Emojis will be added programmatically -->
-                    </WrapPanel>
-
-                    <!-- Custom Upload Section -->
+                    <WrapPanel x:Name="EmojiPanel" Margin="0,0,0,20"/>
                     <TextBlock Text="Custom Icon" 
                                FontSize="16" 
                                FontWeight="Bold" 
                                Foreground="{DynamicResource TextBrush}" 
                                Margin="0,0,0,15"/>
-
-                    <Button Content="📁 Upload Custom Icon" 
-                            Click="UploadCustomIcon_Click"
-                            HorizontalAlignment="Left"
-                            Margin="0,0,0,10"/>
-
-                    <!-- Selected Icon Preview -->
+                    <Button Content="📁 Upload Custom Icon" Click="UploadCustomIcon_Click" HorizontalAlignment="Left" Margin="0,0,0,10"/>
                     <Border x:Name="PreviewBorder"
-                            Width="64" 
-                            Height="64" 
+                            Width="64" Height="64"
                             Background="{DynamicResource SurfaceBrush}"
                             BorderBrush="{DynamicResource BorderBrush}"
                             BorderThickness="1"
@@ -154,13 +239,9 @@
                             Visibility="Collapsed">
                         <Image x:Name="PreviewImage" Stretch="Uniform"/>
                     </Border>
-
-                    <!-- Action Buttons -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Content="✓ Select" Click="Select_Click" Margin="0,0,10,0" Width="120"/>
-                        <Button Content="Cancel" Click="Cancel_Click" 
-                                Background="{DynamicResource SurfaceBrush}" 
-                                Width="100"/>
+                        <Button Content="Cancel" Click="Cancel_Click" Style="{StaticResource CancelButton}" Width="100"/>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

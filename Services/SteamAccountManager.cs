@@ -221,5 +221,15 @@ namespace HackHelper.Services
                 SaveAccounts();
             }
         }
+
+        public void TogglePin(string id)
+        {
+            var acc = _accounts.FirstOrDefault(a => a.Id == id);
+            if (acc == null) return;
+
+            acc.IsPinned = !acc.IsPinned;
+            SaveAccounts();
+        }
+
     }
 }

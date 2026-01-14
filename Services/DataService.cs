@@ -56,17 +56,7 @@ namespace HackHelper.Services
             }
         }
 
-        public void ToggleLauncherPin(string launcherId)
-        {
-            var launchers = LoadLaunchers();
-            var launcher = launchers.FirstOrDefault(l => l.Id == launcherId);
-
-            if (launcher != null)
-            {
-                launcher.IsPinned = !launcher.IsPinned;
-                SaveLaunchers(launchers);
-            }
-        }
+        
 
         // Password methods
         public List<PasswordEntry> LoadPasswords()
@@ -153,5 +143,28 @@ namespace HackHelper.Services
             string json = JsonConvert.SerializeObject(customThemes, Formatting.Indented);
             File.WriteAllText(CustomThemesFile, json);
         }
+
+        public void TogglePasswordPin(string id)
+        {
+            var list = LoadPasswords();
+            var item = list.FirstOrDefault(p => p.Id == id);
+            if (item != null)
+            {
+                item.IsPinned = !item.IsPinned;
+                SavePasswords(list);
+            }
+        }
+
+        public void ToggleLauncherPin(string id)
+        {
+            var list = LoadLaunchers();
+            var item = list.FirstOrDefault(l => l.Id == id);
+            if (item != null)
+            {
+                item.IsPinned = !item.IsPinned;
+                SaveLaunchers(list);
+            }
+        }
+
     }
 }

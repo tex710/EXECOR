@@ -11,7 +11,9 @@ namespace HackHelper.Models
         public string? SteamId { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime? LastUsed { get; set; }
+        public bool IsPinned { get; set; }
         public int LoginCount { get; set; } = 0;
+        
 
         // Display property for UI
         public string DisplayName => $"{AccountName} ({Username})";
