@@ -161,17 +161,53 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{TemplateBinding Content}"
+                               FontWeight="{TemplateBinding FontWeight}"
+                               VerticalAlignment="Center">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <TranslateTransform X="0"/>
+                                                <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                            </TransformGroup>
+                                        </LinearGradientBrush.RelativeTransform>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.6"/>
+                                </TextBlock.Effect>
+                                <TextBlock.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation
+                                            Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </TextBlock.Triggers>
+                            </TextBlock>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
+
 
         <Style x:Key="IconButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -208,13 +244,12 @@
         <!-- Shared Loader Item Template -->
         <DataTemplate x:Key="LoaderItemTemplate">
             <Border Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="15"
-                    Margin="0,0,0,10"
-                    MouseDown="Loader_MouseDown"
-                    Cursor="Hand">
+        BorderThickness="0"                       
+                CornerRadius="8"
+        Padding="15"
+        Margin="0,0,0,10"
+        MouseDown="Loader_MouseDown"
+        Cursor="Hand">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -290,13 +325,12 @@
         <!-- Steam Account Item Template -->
         <DataTemplate x:Key="SteamAccountItemTemplate">
             <Border Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="15"
-                    Margin="0,0,0,10"
-                    MouseDown="SteamAccount_MouseDown"
-                    Cursor="Hand">
+        BorderThickness="0"
+        CornerRadius="8"
+        Padding="15"
+        Margin="0,0,0,10"
+        MouseDown="SteamAccount_MouseDown"
+        Cursor="Hand">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -784,8 +818,8 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="{DynamicResource SurfaceBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="1"
+                
+                BorderThickness="0"
                 CornerRadius="8"
                 Padding="15"
                 Margin="0,0,0,10"
@@ -1023,26 +1057,66 @@
 
             <!-- Custom Resize Grip -->
             <Thumb x:Name="CustomResizeGrip"
-                       Grid.Row="1"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Bottom"
-                       Width="16"
-                       Height="16"
-                       Cursor="SizeNWSE"
-                       Margin="0,0,8,8"
-                       DragDelta="CustomResizeGrip_DragDelta">
+       Grid.Row="1"
+       HorizontalAlignment="Right"
+       VerticalAlignment="Bottom"
+       Width="16"
+       Height="16"
+       Cursor="SizeNWSE"
+       Margin="0,0,8,8"
+       DragDelta="CustomResizeGrip_DragDelta">
                 <Thumb.Template>
                     <ControlTemplate>
-                        <Border Background="{DynamicResource BorderBrush}"
-                             CornerRadius="4"
-                             Width="16"
-                             Height="16"
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Bottom"
-                             Padding="3"/>
+                        <Border Width="16"
+                    Height="16"
+                    CornerRadius="4"
+                    Padding="3">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0"
+                                         EndPoint="1,1"
+                                         SpreadMethod="Repeat">
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.0" x:Name="Stop1"/>
+                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0.5" x:Name="Stop2"/>
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1.0" x:Name="Stop3"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+
+                            <Border.Effect>
+                                <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                      BlurRadius="6"
+                                      ShadowDepth="0"
+                                      Opacity="0.8"/>
+                            </Border.Effect>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <!-- Animate the offsets to simulate motion diagonally -->
+                                        <DoubleAnimation Storyboard.TargetName="Stop1"
+                                             Storyboard.TargetProperty="Offset"
+                                             From="0" To="1"
+                                             Duration="0:0:1.2"
+                                             AutoReverse="True"/>
+                                        <DoubleAnimation Storyboard.TargetName="Stop2"
+                                             Storyboard.TargetProperty="Offset"
+                                             From="0.5" To="1.5"
+                                             Duration="0:0:1.2"
+                                             AutoReverse="True"/>
+                                        <DoubleAnimation Storyboard.TargetName="Stop3"
+                                             Storyboard.TargetProperty="Offset"
+                                             From="1" To="2"
+                                             Duration="0:0:1.2"
+                                             AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Thumb.Template>
             </Thumb>
+
         </Grid>
     </Border>
 </Window>
