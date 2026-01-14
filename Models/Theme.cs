@@ -14,9 +14,9 @@
         // Predefined themes
         public static Theme BluePink => new Theme
         {
-            Name = "Blue & Pink (Default)",
-            PrimaryColor = "#3B82F6",
-            SecondaryColor = "#EC4899",
+            Name = "Cotton Candy",
+            PrimaryColor = "#6666FF",
+            SecondaryColor = "#F497C6",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",
@@ -26,7 +26,7 @@
 
         public static Theme Purple => new Theme
         {
-            Name = "Purple Dream",
+            Name = "Sizzurp",
             PrimaryColor = "#A855F7",
             SecondaryColor = "#EC4899",
             BackgroundColor = "#18181B",
@@ -38,9 +38,9 @@
 
         public static Theme Green => new Theme
         {
-            Name = "Matrix Green",
-            PrimaryColor = "#10B981",
-            SecondaryColor = "#34D399",
+            Name = "Green",
+            PrimaryColor = "#397030",
+            SecondaryColor = "#09FF1B",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",
@@ -50,7 +50,7 @@
 
         public static Theme Red => new Theme
         {
-            Name = "Red Alert",
+            Name = "Red Hot",
             PrimaryColor = "#FF0000",
             SecondaryColor = "#FF004C",
             BackgroundColor = "#18181B",
@@ -62,9 +62,9 @@
 
         public static Theme Cyan => new Theme
         {
-            Name = "Cyan Wave",
-            PrimaryColor = "#06B6D4",
-            SecondaryColor = "#22D3EE",
+            Name = "Cyan",
+            PrimaryColor = "#1AE8FF",
+            SecondaryColor = "#1DAECD",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",
@@ -74,9 +74,9 @@
 
         public static Theme Orange => new Theme
         {
-            Name = "Sunset Orange",
-            PrimaryColor = "#F97316",
-            SecondaryColor = "#FB923C",
+            Name = "Orange",
+            PrimaryColor = "#D35805",
+            SecondaryColor = "#DDAB00",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",

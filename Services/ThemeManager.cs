@@ -12,10 +12,10 @@ namespace HackHelper.Services
         {
             return new List<Theme>
             {
+                Theme.Red,
                 Theme.BluePink,
                 Theme.Purple,
                 Theme.Green,
-                Theme.Red,
                 Theme.Cyan,
                 Theme.Orange
             };
@@ -47,7 +47,7 @@ namespace HackHelper.Services
                 }
             }
 
-            ApplyTheme(theme ?? Theme.BluePink);
+            ApplyTheme(theme ?? Theme.Red);
         }
 
         public static void ApplyTheme(Theme theme)

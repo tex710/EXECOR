@@ -3,27 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:LauncherLoader"
              StartupUri="MainWindow.xaml">
+
     <Application.Resources>
 
-        <Color x:Key="PrimaryColor">#3B82F6</Color>
-        <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+        <!-- Primary (Red Alert) -->
+        <Color x:Key="PrimaryColor">#FF0000</Color>
+        <SolidColorBrush x:Key="PrimaryBrush"
+                         Color="{StaticResource PrimaryColor}" />
 
-        <Color x:Key="SecondaryColor">#EC4899</Color>
-        <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+        <!-- Secondary -->
+        <Color x:Key="SecondaryColor">#FF004C</Color>
+        <SolidColorBrush x:Key="SecondaryBrush"
+                         Color="{StaticResource SecondaryColor}" />
 
+        <!-- Background -->
         <Color x:Key="BackgroundColor">#18181B</Color>
-        <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+        <SolidColorBrush x:Key="BackgroundBrush"
+                         Color="{StaticResource BackgroundColor}" />
 
+        <!-- Surface -->
         <Color x:Key="SurfaceColor">#27272A</Color>
-        <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}"/>
+        <SolidColorBrush x:Key="SurfaceBrush"
+                         Color="{StaticResource SurfaceColor}" />
 
+        <!-- Borders -->
         <Color x:Key="BorderColor">#3F3F46</Color>
-        <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
+        <SolidColorBrush x:Key="BorderBrush"
+                         Color="{StaticResource BorderColor}" />
 
+        <!-- Text -->
         <Color x:Key="TextColor">#FFFFFF</Color>
-        <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
+        <SolidColorBrush x:Key="TextBrush"
+                         Color="{StaticResource TextColor}" />
 
+        <!-- Sub Text -->
         <Color x:Key="SubTextColor">#A1A1AA</Color>
-        <SolidColorBrush x:Key="SubTextBrush" Color="{StaticResource SubTextColor}"/>
+        <SolidColorBrush x:Key="SubTextBrush"
+                         Color="{StaticResource SubTextColor}" />
+
     </Application.Resources>
 </Application>
