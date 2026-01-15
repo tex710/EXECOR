@@ -39,8 +39,8 @@
         public static Theme Green => new Theme
         {
             Name = "Green",
-            PrimaryColor = "#397030",
-            SecondaryColor = "#09FF1B",
+            PrimaryColor = "#06FD00",
+            SecondaryColor = "#CBFF2F",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",
@@ -63,8 +63,8 @@
         public static Theme Cyan => new Theme
         {
             Name = "Cyan",
-            PrimaryColor = "#1AE8FF",
-            SecondaryColor = "#1DAECD",
+            PrimaryColor = "#1DAECD",
+            SecondaryColor = "#00CEE6",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",
@@ -76,7 +76,7 @@
         {
             Name = "Orange",
             PrimaryColor = "#D35805",
-            SecondaryColor = "#DDAB00",
+            SecondaryColor = "#FF922F",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",
