@@ -15,7 +15,7 @@
         public static Theme BluePink => new Theme
         {
             Name = "Cotton Candy",
-            PrimaryColor = "#6666FF",
+            PrimaryColor = "#68C6FD",
             SecondaryColor = "#F497C6",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",

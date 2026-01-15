@@ -128,6 +128,7 @@
             <Setter Property="FontSize" Value="32"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
+            
         </Style>
 
         <!-- Stat Label Style -->
