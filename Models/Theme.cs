@@ -38,7 +38,7 @@
 
         public static Theme Green => new Theme
         {
-            Name = "Green",
+            Name = "Alien Za",
             PrimaryColor = "#06FD00",
             SecondaryColor = "#CBFF2F",
             BackgroundColor = "#18181B",
@@ -74,9 +74,44 @@
 
         public static Theme Orange => new Theme
         {
-            Name = "Orange",
+            Name = "Cheese Pizza",
             PrimaryColor = "#D35805",
             SecondaryColor = "#FF922F",
+            BackgroundColor = "#18181B",
+            SurfaceColor = "#27272A",
+            BorderColor = "#3F3F46",
+            TextColor = "#FFFFFF",
+            SubTextColor = "#A1A1AA"
+        };
+
+        public static Theme Vanilla => new Theme {
+            Name = "Vanilla",
+            PrimaryColor = "#FFD69D",
+            SecondaryColor = "#FFF8DD",
+            BackgroundColor = "#18181B",
+            SurfaceColor = "#27272A",
+            BorderColor = "#3F3F46",
+            TextColor = "#FFFFFF",
+            SubTextColor = "#A1A1AA"
+        };
+
+        public static Theme HKCS => new Theme
+        {
+            Name = "HKCS",
+            PrimaryColor = "#4261DD",
+            SecondaryColor = "#FFE041",
+            BackgroundColor = "#18181B",
+            SurfaceColor = "#27272A",
+            BorderColor = "#3F3F46",
+            TextColor = "#FFFFFF",
+            SubTextColor = "#A1A1AA"
+        };
+
+        public static Theme CandyCane => new Theme
+        {
+            Name = "Candy Cane",
+            PrimaryColor = "#FF2B2B",
+            SecondaryColor = "#FFFFFF",
             BackgroundColor = "#18181B",
             SurfaceColor = "#27272A",
             BorderColor = "#3F3F46",

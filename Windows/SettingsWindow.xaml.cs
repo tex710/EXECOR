@@ -13,6 +13,25 @@ namespace HackHelper
         private DataService dataService;
         private Settings settings;
 
+        // Reference to MainWindow
+        private MainWindow mainWindow;
+
+        private const string AppVersion = "v1.2.3"; // manually update version here
+
+        // Constructor that accepts MainWindow reference
+        public SettingsWindow(MainWindow mw)
+        {
+            InitializeComponent();
+            mainWindow = mw;
+
+            dataService = new DataService();
+            LoadSettings();
+
+            // Optional: update title immediately when opening settings
+            mainWindow?.UpdateTitleVersion();
+        }
+
+        // Keep parameterless constructor if needed
         public SettingsWindow()
         {
             InitializeComponent();
@@ -27,6 +46,9 @@ namespace HackHelper
             LaunchOnStartupCheckBox.IsChecked = settings.LaunchOnStartup;
             MinimizeToTrayCheckBox.IsChecked = settings.MinimizeToTray;
             ClipboardAutoClearCheckBox.IsChecked = settings.ClipboardAutoClear;
+            ShowVersionCheckBox.IsChecked = settings.ShowVersionInTitle;
+            ShowToastCheckBox.IsChecked = settings.ShowToastNotifications;
+
 
             foreach (ComboBoxItem item in ClipboardTimeoutComboBox.Items)
             {
@@ -36,8 +58,6 @@ namespace HackHelper
                     break;
                 }
             }
-
-            
         }
 
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
@@ -45,18 +65,21 @@ namespace HackHelper
             settings.LaunchOnStartup = LaunchOnStartupCheckBox.IsChecked == true;
             settings.MinimizeToTray = MinimizeToTrayCheckBox.IsChecked == true;
             settings.ClipboardAutoClear = ClipboardAutoClearCheckBox.IsChecked == true;
+            settings.ShowVersionInTitle = ShowVersionCheckBox.IsChecked == true;
+            settings.ShowToastNotifications = ShowToastCheckBox.IsChecked == true;
+
 
             if (ClipboardTimeoutComboBox.SelectedItem is ComboBoxItem item)
             {
                 settings.ClipboardTimeout = int.Parse(item.Tag.ToString());
             }
 
-            
-
             dataService.SaveSettings(settings);
-            ApplyStartupSetting();
 
-           
+            // Refresh main window title immediately
+            mainWindow?.UpdateTitleVersion();
+
+            ApplyStartupSetting();
             this.Close();
         }
 
@@ -90,8 +113,5 @@ namespace HackHelper
         {
             this.Close();
         }
-
-        
-
     }
 }

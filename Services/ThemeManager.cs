@@ -17,7 +17,10 @@ namespace HackHelper.Services
                 Theme.Purple,
                 Theme.Green,
                 Theme.Cyan,
-                Theme.Orange
+                Theme.Orange,
+                Theme.CandyCane,
+                Theme.Vanilla,
+                Theme.HKCS
             };
         }
 

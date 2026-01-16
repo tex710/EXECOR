@@ -380,7 +380,7 @@ namespace HackHelper
         private void ResetToDefault_Click(object sender, RoutedEventArgs e)
         {
             var result = System.Windows.MessageBox.Show(
-                "Reset to default Blue & Pink theme?",
+                "Reset to default Red Hot theme?",
                 "Confirm Reset",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);

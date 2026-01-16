@@ -92,8 +92,8 @@
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBrush}"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="Padding" Value="10,8"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Height" Value="35"/>
@@ -189,7 +189,7 @@
                                     <Border 
                                 x:Name="DropDownBorder"
                                 Background="{DynamicResource SurfaceBrush}"
-                                BorderThickness="1"
+                                BorderThickness="2"
                                 BorderBrush="{DynamicResource PrimaryBrush}"
                                 CornerRadius="6"
                                 Margin="0,2,0,0">
@@ -214,12 +214,12 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBoxItem">
                         <Border 
-                    Name="Border"
-                    Background="{TemplateBinding Background}"
-                    BorderThickness="0"
-                    CornerRadius="4"
-                    Padding="{TemplateBinding Padding}"
-                    Margin="2">
+            Name="Border"
+            Background="{TemplateBinding Background}"
+            BorderThickness="0"
+            CornerRadius="4"
+            Padding="{TemplateBinding Padding}"
+            Margin="2">
                             <ContentPresenter />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -567,7 +567,7 @@
                                           SelectionChanged="CustomThemeComboBox_SelectionChanged"
                                           Background="{DynamicResource BackgroundBrush}"
                                           Foreground="{DynamicResource TextBrush}"
-                                          BorderBrush="{DynamicResource BackgroundBrush}"
+                                          BorderBrush="{DynamicResource PrimaryBrush}"                                          
                                           Padding="10,8"
                                           FontSize="13"/>
                             </StackPanel>

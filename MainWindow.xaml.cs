@@ -54,6 +54,7 @@ namespace HackHelper
             steamAccountManager = new SteamAccountManager();
             LoadData();
             ThemeManager.ApplyTheme(settings.SelectedTheme);
+            ApplyTitleVersion();
             this.RenderTransform = new ScaleTransform(1.0, 1.0);
             this.RenderTransformOrigin = new Point(0.5, 0.5);
 
@@ -79,6 +80,33 @@ namespace HackHelper
             RefreshPasswordsList();
             RefreshSteamAccountsList();
         }
+
+        private const string AppVersion = "v1🎉"; // manual version
+
+        private void ApplyTitleVersion()
+        {
+            // Load settings
+            var dataService = new DataService();
+            var settings = dataService.LoadSettings();
+
+            if (settings.ShowVersionInTitle)
+                TitleTextBlock.Text = $"EXECOR {AppVersion}";
+            else
+                TitleTextBlock.Text = "EXECOR";
+        }
+
+        public void UpdateTitleVersion()
+        {
+            var dataService = new DataService();
+            var settings = dataService.LoadSettings();
+
+            if (settings.ShowVersionInTitle)
+                TitleTextBlock.Text = $"EXECOR {AppVersion}";
+            else
+                TitleTextBlock.Text = "EXECOR";
+        }
+
+
 
         #region Refresh Lists
         private void RefreshLaunchersList(string searchQuery = "")
@@ -431,9 +459,21 @@ namespace HackHelper
         #endregion
 
         #region Misc Buttons
-        private void Settings_Click(object sender, RoutedEventArgs e) => new SettingsWindow { Owner = this }.ShowDialog();
-        private void Statistics_Click(object sender, RoutedEventArgs e) => new StatisticsWindow(launchers) { Owner = this }.ShowDialog();
-        private void ThemeEditor_Click(object sender, RoutedEventArgs e) => new ThemeEditorWindow { Owner = this }.ShowDialog();
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            // Pass 'this' to SettingsWindow so it can refresh title in real time
+            var settingsWindow = new SettingsWindow(this)
+            {
+                Owner = this
+            };
+            settingsWindow.ShowDialog();
+        }
+
+        private void Statistics_Click(object sender, RoutedEventArgs e)
+            => new StatisticsWindow(launchers) { Owner = this }.ShowDialog();
+
+        private void ThemeEditor_Click(object sender, RoutedEventArgs e)
+            => new ThemeEditorWindow { Owner = this }.ShowDialog();
         #endregion
 
         #region Helper

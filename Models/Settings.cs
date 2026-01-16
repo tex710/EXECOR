@@ -8,11 +8,14 @@ namespace HackHelper.Models
 {
     public class Settings
     {
-        public bool LaunchOnStartup { get; set; }
-        public bool MinimizeToTray { get; set; }
-        public bool ClipboardAutoClear { get; set; }
-        public int ClipboardTimeout { get; set; } // in seconds
-        public string SelectedTheme { get; set; } = "Blue & Pink (Default)";
+        public bool LaunchOnStartup { get; set; } = false;              // default settings
+        public bool MinimizeToTray { get; set; } = false;
+        public bool ClipboardAutoClear { get; set; } = true;
+        public int ClipboardTimeout { get; set; } = 10;  // in seconds
+        public string SelectedTheme { get; set; } = "Red Hot (Default)";
+        public bool ShowVersionInTitle { get; set; } = false; 
+        public bool ShowToastNotifications { get; set; } = true;
+
         public Settings()
         {
             LaunchOnStartup = false;

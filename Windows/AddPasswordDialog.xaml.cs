@@ -1,12 +1,13 @@
-﻿using System;
+﻿using HackHelper.Models;
+using HackHelper.Services;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using HackHelper.Models;
-using HackHelper.Services;
+using System.Windows.Media.Effects;
 
 namespace HackHelper
 {
@@ -200,20 +201,86 @@ namespace HackHelper
             var result = PasswordStrengthService.CalculateStrength(password);
 
             StrengthText.Text = result.StrengthText;
-            StrengthText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(result.Color));
+
+            // Calculate target width based on the actual container width
+            // Use StrengthBarContainer.ActualWidth, which is the Border containing the strength bar
+            double containerWidth = StrengthBarContainer.ActualWidth > 0
+                ? StrengthBarContainer.ActualWidth - 2 // Subtract 2 for the border
+                : 458; // Fallback width
+
+            double targetWidth = containerWidth * (result.ProgressPercentage / 100.0);
 
             // Animate the strength bar
-            double targetWidth = (this.ActualWidth > 0 ? this.ActualWidth - 100 : 400) * (result.ProgressPercentage / 100.0);
-
             DoubleAnimation widthAnim = new DoubleAnimation
             {
                 To = targetWidth,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                Duration = TimeSpan.FromMilliseconds(400),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
 
             StrengthBar.BeginAnimation(System.Windows.FrameworkElement.WidthProperty, widthAnim);
-            StrengthBar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(result.Color));
+
+            // Create gradient background based on strength
+            var color = (Color)ColorConverter.ConvertFromString(result.Color);
+            Brush gradientBrush;
+
+            if (result.StrengthText == "Very Strong")
+            {
+                // Use Primary -> Secondary gradient for Very Strong
+                var primaryColor = (Color)FindResource("PrimaryColor");
+                var secondaryColor = (Color)FindResource("SecondaryColor");
+
+                gradientBrush = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 0)
+                };
+                ((LinearGradientBrush)gradientBrush).GradientStops.Add(new GradientStop(primaryColor, 0));
+                ((LinearGradientBrush)gradientBrush).GradientStops.Add(new GradientStop(secondaryColor, 1));
+
+                // Apply gradient to text
+                var textGradient = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 0)
+                };
+                textGradient.GradientStops.Add(new GradientStop(primaryColor, 0));
+                textGradient.GradientStops.Add(new GradientStop(secondaryColor, 1));
+                StrengthText.Foreground = textGradient;
+
+                // Update glow with primary color
+                if (StrengthBar.Effect is DropShadowEffect glow)
+                {
+                    glow.Color = primaryColor;
+                    glow.Opacity = 0.8;
+                }
+            }
+            else
+            {
+                // Use subtle gradient for other strengths
+                gradientBrush = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 0)
+                };
+                ((LinearGradientBrush)gradientBrush).GradientStops.Add(new GradientStop(color, 0));
+                ((LinearGradientBrush)gradientBrush).GradientStops.Add(new GradientStop(Color.FromArgb(255,
+                    (byte)Math.Min(255, color.R + 30),
+                    (byte)Math.Min(255, color.G + 30),
+                    (byte)Math.Min(255, color.B + 30)), 1));
+
+                // Solid color for text
+                StrengthText.Foreground = new SolidColorBrush(color);
+
+                // Update the glow effect color
+                if (StrengthBar.Effect is DropShadowEffect glow)
+                {
+                    glow.Color = color;
+                    glow.Opacity = result.ProgressPercentage > 60 ? 0.8 : 0.4;
+                }
+            }
+
+            StrengthBar.Background = gradientBrush;
         }
 
         private string GetCurrentPassword()

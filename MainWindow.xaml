@@ -96,6 +96,68 @@
             </Setter>
         </Style>
 
+        <!-- Animated Dark Tooltip Style (Clean, No Errors) -->
+        <Style x:Key="AnimatedDarkToolTip" TargetType="ToolTip">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Placement" Value="Mouse"/>
+            <Setter Property="HasDropShadow" Value="False"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolTip">
+                        <Border CornerRadius="8"
+                        Background="{DynamicResource SurfaceBrush}"
+                        BorderThickness="2"
+                        BorderBrush="{DynamicResource PrimaryBrush}"
+                        Padding="10">
+
+                            <TextBlock Text="{TemplateBinding Content}"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                        <LinearGradientBrush.RelativeTransform>
+                                            <TranslateTransform x:Name="TooltipTranslate" X="0"/>
+                                        </LinearGradientBrush.RelativeTransform>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+
+                        <!-- Glow on text only -->
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.9"/>
+                                </TextBlock.Effect>
+
+                        <!-- Animate gradient -->
+                                <TextBlock.Triggers>
+                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation
+                                            Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TranslateTransform.X)"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </TextBlock.Triggers>
+                            </TextBlock>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
         <!-- Button Styles -->
         <Style x:Key="BaseButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
@@ -531,16 +593,40 @@
                         <Button Content="🌐"
                             Style="{StaticResource TabItemButton}"
                             Click="VisitWebsite_Click"
-                            Tag="{Binding}"/>
+                            Tag="{Binding}">
+
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                    Content="Visit website (default browser)"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
                         <Button Content="▶"
                             Style="{StaticResource TabItemButton}"
                             Click="LaunchLoader_Click"
-                            Tag="{Binding}"/>
+                            Tag="{Binding}">
+
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                    Content="Runs the EXE you imported"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
                         <Button Content="🗑"
                             Style="{StaticResource TabItemButton}"
                             Click="DeleteLauncher_Click"
                             Tag="{Binding}"
-                            Margin="0"/>
+                            Margin="0">
+
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                    Content="Are you sure you want to delete this?"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
                     </StackPanel>
                 </Grid>
             </Border>
@@ -692,22 +778,54 @@
                     <!-- Action Buttons -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Content="👤"
-                             Style="{StaticResource TabItemButton}"
-                             Click="CopySteamUsername_Click"
-                             Tag="{Binding}"/>
+                            Style="{StaticResource TabItemButton}"
+                            Click="CopySteamUsername_Click"
+                            Tag="{Binding}">
+
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                    Content="Copy your username"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
                         <Button Content="🔑"
-                             Style="{StaticResource TabItemButton}"
-                             Click="CopySteamPassword_Click"
-                             Tag="{Binding}"/>
+                            Style="{StaticResource TabItemButton}"
+                            Click="CopySteamPassword_Click"
+                            Tag="{Binding}">
+        
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                     Content="Copy your password"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
                         <Button Content="👾"
-                             Style="{StaticResource TabItemButton}"
-                             Click="SwitchSteamAccount_Click"
-                             Tag="{Binding}"/>
+                            Style="{StaticResource TabItemButton}"
+                            Click="SwitchSteamAccount_Click"
+                            Tag="{Binding}">
+
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                    Content="1 click login"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
                         <Button Content="🗑"
-                             Style="{StaticResource TabItemButton}"
-                             Click="DeleteSteamAccount_Click"
-                             Tag="{Binding}"
-                             Margin="0"/>
+                            Style="{StaticResource TabItemButton}"
+                            Click="DeleteSteamAccount_Click"
+                            Tag="{Binding}"
+                            Margin="0">
+
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                    Content="Are you sure you want to delete this?"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
                     </StackPanel>
                 </Grid>
             </Border>
@@ -855,14 +973,16 @@
                  CornerRadius="12,12,0,0"
                  MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
+                    
 
                     <!-- Logo text with Eurostile Bold -->
-                    <TextBlock Text="EXECOR"
-                         FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
-                         FontSize="24"
-                         FontWeight="Bold"
-                         VerticalAlignment="Center"
-                         Margin="12,0,0,0">
+                    <TextBlock x:Name="TitleTextBlock"
+                        Text="EXECOR"
+                        FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
+                        FontSize="24"
+                        FontWeight="Bold"
+                        VerticalAlignment="Center"
+                        Margin="12,0,0,0">
 
                         <TextBlock.Foreground>
                             <LinearGradientBrush x:Name="TitleGradient"
@@ -1240,15 +1360,31 @@
                                                             <!-- Buttons -->
                                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,4,0,0">
                                                                 <Button Content="📋 Copy"
-                                                                    Style="{StaticResource PasswordButton}"
-                                                                    Click="CopyPassword_Click"
-                                                                    Tag="{Binding}"
-                                                                    Margin="0,0,8,0"/>
+                                                                     Style="{StaticResource PasswordButton}"
+                                                                     Click="CopyPassword_Click"
+                                                                     Tag="{Binding}"
+                                                                     Margin="0,0,8,0">
+
+                                                                    <Button.ToolTip>
+                                                                        <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                                                           Content="Copy your password"/>
+                                                                    </Button.ToolTip>
+
+                                                                </Button>
+
                                                                 <Button Content="🗑 Delete"
                                                                     Style="{StaticResource PasswordButton}"
                                                                     Click="DeletePassword_Click"
                                                                     Tag="{Binding}"
-                                                                    Margin="0"/>
+                                                                    Margin="0">
+
+                                                                    <Button.ToolTip>
+                                                                        <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                                                            Content="Are you sure you want to delete this?"/>
+                                                                    </Button.ToolTip>
+
+                                                                </Button>
+
                                                             </StackPanel>
                                                             
                                                             
@@ -1359,7 +1495,6 @@
                                    FontWeight="Bold"
                                    Foreground="{DynamicResource SubTextBrush}"
                                    Margin="0,0,0,15"/>
-
                         <Button Content="➕ Add Loader"
                                 Style="{StaticResource SidebarButton}"
                                 Click="AddLauncher_Click"/>
