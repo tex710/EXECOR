@@ -23,6 +23,7 @@ I never have and most likey never will have the intention of sitting here and ac
 ***If you have any questions, concerns, or suggestions you can join the [Execor](https://discord.gg/WPBWY6pnrj) discord server***
 
 ---
+![GitHub release](https://img.shields.io/github/v/release/tex710/EXECOR?label=release)
 
 ## Features
 - Universal Exe Manager, import any exe then you can launch it from the app
