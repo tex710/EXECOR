@@ -31,7 +31,7 @@ I never have and most likey never will have the intention of sitting here and ac
 
 ---
 
-## Installation
+## Installation (windows only)
 
 ***SETUP.EXE***
 
