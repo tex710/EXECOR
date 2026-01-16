@@ -56,6 +56,16 @@ namespace HackHelper
             ThemeManager.ApplyTheme(settings.SelectedTheme);
             this.RenderTransform = new ScaleTransform(1.0, 1.0);
             this.RenderTransformOrigin = new Point(0.5, 0.5);
+
+            if (settings.MinimizeToTray)
+            {
+                // Delay slightly so window initializes properly
+                Dispatcher.InvokeAsync(() =>
+                {
+                    this.WindowState = WindowState.Minimized;
+                    this.ShowInTaskbar = false; // hide from taskbar
+                }, DispatcherPriority.ApplicationIdle);
+            }
         }
 
         private void LoadData()

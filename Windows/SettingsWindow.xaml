@@ -571,13 +571,15 @@
                             </ComboBox>
                         </StackPanel>
 
-
-
+                        
                         <!-- Save Button -->
                         <Button Content="💾 Save Settings" 
                                 Click="SaveSettings_Click" 
                                 HorizontalAlignment="Right"
                                 Margin="0,20,0,0"/>
+
+                        
+
                     </StackPanel>
                 </ScrollViewer>
             </Grid>

@@ -90,5 +90,8 @@ namespace HackHelper
         {
             this.Close();
         }
+
+        
+
     }
 }
