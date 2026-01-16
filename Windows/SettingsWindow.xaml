@@ -78,6 +78,102 @@
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
             <Setter Property="Margin" Value="0,0,0,15"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Width="24" Height="24">
+                                <!-- Outer Box -->
+                                <Border x:Name="OuterBorder"
+                                Width="24" 
+                                Height="24"
+                                Background="{DynamicResource SurfaceBrush}"
+                                BorderBrush="{DynamicResource SurfaceBrush}"
+                                BorderThickness="2"
+                                CornerRadius="6"/>
+
+                                <!-- Inner Gradient Box (shown when checked) -->
+                                <Border x:Name="InnerBorder"
+        Width="16" 
+        Height="16"
+        CornerRadius="4"
+        Opacity="0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+                                    <Border.Background>
+                                        <LinearGradientBrush x:Name="CheckboxGradient"
+                             StartPoint="0,0"
+                             EndPoint="1,0"
+                             SpreadMethod="Repeat">
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+
+                                            <LinearGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <TranslateTransform x:Name="CheckboxGradientTranslate" X="0"/>
+                                                    <RotateTransform Angle="40" CenterX="0.5" CenterY="0.5"/>
+                                                </TransformGroup>
+                                            </LinearGradientBrush.RelativeTransform>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                          BlurRadius="10"
+                          ShadowDepth="0"
+                          Opacity="0.8"/>
+                                    </Border.Effect>
+
+                                    <Border.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation
+                        Storyboard.TargetName="CheckboxGradientTranslate"
+                        Storyboard.TargetProperty="X"
+                        From="0"
+                        To="1"
+                        Duration="0:0:1.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Border.Triggers>
+                                </Border>
+                            </Grid>
+
+                            <ContentPresenter Margin="8,0,0,0" 
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"/>
+                        </StackPanel>
+
+                        <ControlTemplate.Triggers>
+                            <!-- When Checked -->
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="InnerBorder" Property="Opacity" Value="1"/>
+                            </Trigger>
+
+                            <!-- Hover effect on unchecked -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="InnerBorder" Property="Opacity" Value="0.5"/>
+                            </MultiTrigger>
+
+                            <!-- Hover effect on checked -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="InnerBorder" Property="Opacity" Value="0.75"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- Button Style -->
@@ -139,7 +235,7 @@
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,8"/>
             <Setter Property="FontSize" Value="14"/>
@@ -157,14 +253,15 @@
                                 <ToggleButton.Style>
                                     <Style TargetType="ToggleButton">
                                         <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
-                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                                        
+                                        
                                         <Setter Property="BorderThickness" Value="1"/>
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="ToggleButton">
                                                     <Border 
                                                         Background="{TemplateBinding Background}" 
-                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                        
                                                         BorderThickness="{TemplateBinding BorderThickness}"
                                                         CornerRadius="6">
                                                         <Grid>
@@ -237,7 +334,7 @@
                                         x:Name="DropDownBorder"
                                         Background="{DynamicResource SurfaceBrush}"
                                         BorderThickness="1"
-                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        BorderBrush="{DynamicResource SurfaceBrush}"
                                         CornerRadius="6"
                                         Margin="0,2,0,0">
                                         <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
@@ -370,14 +467,94 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <!-- App Behavior Section -->
-                        <TextBlock Text="App Behavior" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+                        <TextBlock Text="App Behavior" FontSize="18" FontWeight="Bold" Margin="0,0,0,15">
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush x:Name="AppBehaviorGradient"
+                             StartPoint="0,0"
+                             EndPoint="1,0"
+                             SpreadMethod="Repeat">
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <TranslateTransform x:Name="AppBehaviorGradientTranslate" X="0"/>
+                                            <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                          BlurRadius="10"
+                          ShadowDepth="0"
+                          Opacity="0.8"/>
+                            </TextBlock.Effect>
+
+                            <TextBlock.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation
+                        Storyboard.TargetName="AppBehaviorGradientTranslate"
+                        Storyboard.TargetProperty="X"
+                        From="0"
+                        To="1"
+                        Duration="0:0:1.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </TextBlock.Triggers>
+                        </TextBlock>
                         <CheckBox x:Name="LaunchOnStartupCheckBox" 
                                   Content="Launch on Windows startup"/>
                         <CheckBox x:Name="MinimizeToTrayCheckBox" 
                                   Content="Start minimized to system tray"/>
 
                         <!-- Security Section -->
-                        <TextBlock Text="Security" FontSize="18" FontWeight="Bold" Margin="0,20,0,15"/>
+                        <TextBlock Text="Security" FontSize="18" FontWeight="Bold" Margin="0,20,0,15">
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush x:Name="SecurityGradient"
+                             StartPoint="0,0"
+                             EndPoint="1,0"
+                             SpreadMethod="Repeat">
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <TranslateTransform x:Name="SecurityGradientTranslate" X="0"/>
+                                            <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                          BlurRadius="10"
+                          ShadowDepth="0"
+                          Opacity="0.8"/>
+                            </TextBlock.Effect>
+
+                            <TextBlock.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation
+                        Storyboard.TargetName="SecurityGradientTranslate"
+                        Storyboard.TargetProperty="X"
+                        From="0"
+                        To="1"
+                        Duration="0:0:1.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </TextBlock.Triggers>
+                        </TextBlock>
                         <CheckBox x:Name="ClipboardAutoClearCheckBox" 
                                   Content="Auto-clear clipboard after copying password"
                                   Margin="0,0,0,10"/>

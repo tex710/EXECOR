@@ -16,6 +16,7 @@
         </Style>
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
         </Style>
         <Style TargetType="Control">
             <Setter Property="FontFamily" Value="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"/>
@@ -23,37 +24,114 @@
         <!--================================-->
 
         <!-- Scrollbar Styles -->
-        <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+        <Style x:Key="ScrollBarThumb" TargetType="Thumb">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Border Background="{DynamicResource PrimaryBrush}" 
-                                CornerRadius="6"
-                                Margin="2"/>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border CornerRadius="6" Margin="2">
+                            <Border.Background>
+                                <LinearGradientBrush x:Name="ThumbGradient" StartPoint="0,0" EndPoint="0,1" SpreadMethod="Repeat">
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <TranslateTransform x:Name="ThumbGradientTranslate" Y="0"/>
+                                            <RotateTransform Angle="-15" CenterX="0.5" CenterY="0.5"/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                </LinearGradientBrush>
+                            </Border.Background>
+
+                            <Border.Effect>
+                                <DropShadowEffect Color="{DynamicResource PrimaryColor}" BlurRadius="8" ShadowDepth="0" Opacity="0.6"/>
+                            </Border.Effect>
+
+                            <Border.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation 
+                                        Storyboard.TargetName="ThumbGradientTranslate" 
+                                        Storyboard.TargetProperty="Y"
+                                        From="0" To="1" Duration="0:0:1.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Border.Triggers>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style TargetType="{x:Type ScrollBar}">
-            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <!-- ScrollBar Style -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
             <Setter Property="Width" Value="12"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
-                        <Grid>
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="6"
-                                    Margin="2"/>
-                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent" SnapsToDevicePixels="true">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="6" Margin="2"/>
+                            <Track x:Name="PART_Track" IsDirectionReversed="True" IsEnabled="{TemplateBinding IsMouseOver}">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Opacity="0" Focusable="false"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Opacity="0" Focusable="false"/>
+                                </Track.IncreaseRepeatButton>
                                 <Track.Thumb>
-                                    <Thumb Style="{StaticResource ScrollBarThumb}"/>
+                                    <Thumb Style="{StaticResource ScrollBarThumb}" />
                                 </Track.Thumb>
                             </Track>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <!-- Animated progress-bar fill (same motion as scrollbar thumb) -->
+        <Style x:Key="AnimatedProgressFill" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0"
+                                 EndPoint="1,0"
+                                 SpreadMethod="Repeat"
+                                 MappingMode="RelativeToBoundingBox">
+                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                        <GradientStop Color="{DynamicResource PrimaryColor}"   Offset="1.0"/>
+                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+
+                        <!--  diagonal stripes  -->
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <RotateTransform Angle="15" CenterX="0.5" CenterY="0.5"/>
+                                <!--  name lives here  -->
+                                <TranslateTransform x:Name="ProgressTranslate" X="0"/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <!--  animate the horizontal offset  -->
+                            <DoubleAnimation Storyboard.TargetProperty="Background.(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[1].(TranslateTransform.X)"
+                                     From="0" To="1" Duration="0:0:1.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
         </Style>
 
         <!-- Window Control Buttons -->
@@ -77,7 +155,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Opacity" Value="0.85"/>
@@ -105,30 +183,29 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        
 
         <!-- Stat Card Style -->
         <Style x:Key="StatCard" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="20"/>
         </Style>
 
-        <!-- Section Title Style -->
+        <!-- Section Title Style with Animated Gradient -->
         <Style x:Key="SectionTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
         </Style>
 
-        <!-- Stat Value Style -->
+        <!-- Stat Value Style with Gradient -->
         <Style x:Key="StatValue" TargetType="TextBlock">
             <Setter Property="FontSize" Value="32"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
-            
         </Style>
 
         <!-- Stat Label Style -->
@@ -139,7 +216,6 @@
         </Style>
     </Window.Resources>
 
-    <!-- REMOVED colored border, kept clean background -->
     <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
@@ -150,7 +226,6 @@
             <!-- Title Bar with Animated Gradient Text -->
             <Border Grid.Row="0" Background="#0F0F12" CornerRadius="12,12,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid Height="40">
-                    <!-- Stylized Title Text with Gradient Animation -->
                     <TextBlock Text="STATISTICS"
                                FontFamily="pack://application:,,,/Resources/EurostileBold.ttf#Eurostile Bold"
                                FontSize="18"
@@ -165,7 +240,6 @@
                                 <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
                                 <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
                                 <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
-
                                 <LinearGradientBrush.RelativeTransform>
                                     <TransformGroup>
                                         <TranslateTransform x:Name="GradientTranslate" X="0"/>
@@ -174,14 +248,12 @@
                                 </LinearGradientBrush.RelativeTransform>
                             </LinearGradientBrush>
                         </TextBlock.Foreground>
-
                         <TextBlock.Effect>
                             <DropShadowEffect Color="{DynamicResource PrimaryColor}"
                                               BlurRadius="10"
                                               ShadowDepth="0"
                                               Opacity="0.8"/>
                         </TextBlock.Effect>
-
                         <TextBlock.Triggers>
                             <EventTrigger RoutedEvent="Loaded">
                                 <BeginStoryboard>
@@ -198,7 +270,6 @@
                         </TextBlock.Triggers>
                     </TextBlock>
 
-                    <!-- Window Control Button -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
                         <Button Style="{StaticResource CloseButton}" Click="CloseButton_Click">
                             <TextBlock Text="🗙" FontSize="16" VerticalAlignment="Center" Margin="0,-3,0,0"/>
@@ -211,9 +282,48 @@
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20">
                 <StackPanel>
 
-                    <!-- Overview Cards -->
-                    <TextBlock Text="Overview" Style="{StaticResource SectionTitle}" Margin="0,0,0,15"/>
-                    <Grid Margin="0,0,0,20">
+                    <!-- Overview Section -->
+                    <TextBlock Style="{StaticResource SectionTitle}" Margin="0,0,0,15">
+                        <TextBlock.Text>Overview</TextBlock.Text>
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="OverviewGradient"
+                                                 StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="OverviewGradientTranslate" X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.8"/>
+                        </TextBlock.Effect>
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="OverviewGradientTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
+                    <Grid Margin="0,0,0,30">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -224,7 +334,38 @@
                         <Border Grid.Column="0" Style="{StaticResource StatCard}" Margin="0,0,10,0">
                             <StackPanel>
                                 <TextBlock Text="🚀" FontSize="24" Margin="0,0,0,10"/>
-                                <TextBlock x:Name="TotalLaunchesText" Style="{StaticResource StatValue}"/>
+                                <TextBlock x:Name="TotalLaunchesText" FontSize="32" FontWeight="Bold">
+                                    <TextBlock.Foreground>
+                                        <LinearGradientBrush x:Name="LaunchesBrush"
+                                     StartPoint="0,0" EndPoint="1,0"
+                                     SpreadMethod="Repeat">
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                            <GradientStop Color="{DynamicResource PrimaryColor}"   Offset="1.0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                            <LinearGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <TranslateTransform x:Name="LaunchesTx" X="0"/>
+                                                    <RotateTransform Angle="40" CenterX="0.5" CenterY="0.5"/>
+                                                </TransformGroup>
+                                            </LinearGradientBrush.RelativeTransform>
+                                        </LinearGradientBrush>
+                                    </TextBlock.Foreground>
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                  BlurRadius="10" ShadowDepth="0" Opacity="0.8"/>
+                                    </TextBlock.Effect>
+                                    <TextBlock.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation Storyboard.TargetName="LaunchesTx"
+                                             Storyboard.TargetProperty="X"
+                                             From="0" To="1" Duration="0:0:1.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </TextBlock.Triggers>
+                                </TextBlock>
                                 <TextBlock Text="Total Launches" Style="{StaticResource StatLabel}"/>
                             </StackPanel>
                         </Border>
@@ -233,7 +374,38 @@
                         <Border Grid.Column="1" Style="{StaticResource StatCard}" Margin="0,0,10,0">
                             <StackPanel>
                                 <TextBlock Text="📦" FontSize="24" Margin="0,0,0,10"/>
-                                <TextBlock x:Name="TotalLoadersText" Style="{StaticResource StatValue}"/>
+                                <TextBlock x:Name="TotalLoadersText" FontSize="32" FontWeight="Bold">
+                                    <TextBlock.Foreground>
+                                        <LinearGradientBrush x:Name="LoadersBrush"
+                                     StartPoint="0,0" EndPoint="1,0"
+                                     SpreadMethod="Repeat">
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                            <GradientStop Color="{DynamicResource PrimaryColor}"   Offset="1.0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                            <LinearGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <TranslateTransform x:Name="LoadersTx" X="0"/>
+                                                    <RotateTransform Angle="40" CenterX="0.5" CenterY="0.5"/>
+                                                </TransformGroup>
+                                            </LinearGradientBrush.RelativeTransform>
+                                        </LinearGradientBrush>
+                                    </TextBlock.Foreground>
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                  BlurRadius="10" ShadowDepth="0" Opacity="0.8"/>
+                                    </TextBlock.Effect>
+                                    <TextBlock.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation Storyboard.TargetName="LoadersTx"
+                                             Storyboard.TargetProperty="X"
+                                             From="0" To="1" Duration="0:0:1.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </TextBlock.Triggers>
+                                </TextBlock>
                                 <TextBlock Text="Total Loaders" Style="{StaticResource StatLabel}"/>
                             </StackPanel>
                         </Border>
@@ -242,20 +414,90 @@
                         <Border Grid.Column="2" Style="{StaticResource StatCard}">
                             <StackPanel>
                                 <TextBlock Text="🎮" FontSize="24" Margin="0,0,0,10"/>
-                                <TextBlock x:Name="MostUsedGameText" Style="{StaticResource StatValue}" FontSize="24"/>
-                                <TextBlock Text="Most Used Catagory" Style="{StaticResource StatLabel}"/>
+                                <TextBlock x:Name="MostUsedGameText" FontSize="24" FontWeight="Bold">
+                                    <TextBlock.Foreground>
+                                        <LinearGradientBrush x:Name="GameBrush"
+                                     StartPoint="0,0" EndPoint="1,0"
+                                     SpreadMethod="Repeat">
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                            <GradientStop Color="{DynamicResource PrimaryColor}"   Offset="1.0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                            <LinearGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <TranslateTransform x:Name="GameTx" X="0"/>
+                                                    <RotateTransform Angle="40" CenterX="0.5" CenterY="0.5"/>
+                                                </TransformGroup>
+                                            </LinearGradientBrush.RelativeTransform>
+                                        </LinearGradientBrush>
+                                    </TextBlock.Foreground>
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                  BlurRadius="10" ShadowDepth="0" Opacity="0.8"/>
+                                    </TextBlock.Effect>
+                                    <TextBlock.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation Storyboard.TargetName="GameTx"
+                                             Storyboard.TargetProperty="X"
+                                             From="0" To="1" Duration="0:0:1.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </TextBlock.Triggers>
+                                </TextBlock>
+                                <TextBlock Text="Most Used Category" Style="{StaticResource StatLabel}"/>
                             </StackPanel>
                         </Border>
                     </Grid>
 
                     <!-- Top 5 Loaders -->
-                    <TextBlock Text="Top 5 Most Used Loaders" Style="{StaticResource SectionTitle}" Margin="0,10,0,15"/>
+                    <TextBlock Style="{StaticResource SectionTitle}" Margin="0,10,0,15">
+                        <TextBlock.Text>Top 5 Most Used Loaders</TextBlock.Text>
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="Top5Gradient"
+                                                 StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="Top5GradientTranslate" X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.8"/>
+                        </TextBlock.Effect>
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="Top5GradientTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
                     <Border Background="{DynamicResource SurfaceBrush}" 
-                            BorderBrush="{DynamicResource BorderBrush}" 
+                            BorderBrush="{DynamicResource SurfaceBrush}" 
                             BorderThickness="1" 
                             CornerRadius="8" 
                             Padding="15"
-                            Margin="0,0,0,20">
+                            Margin="0,0,0,30">
                         <ItemsControl x:Name="TopLoadersListBox">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -267,14 +509,19 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Rank Badge -->
+                                            <!-- Rank Badge with Gradient -->
                                             <Border Grid.Column="0" 
                                                     Width="30" 
                                                     Height="30" 
                                                     CornerRadius="15" 
-                                                    Background="{DynamicResource PrimaryBrush}"
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Center">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
                                                 <TextBlock Text="{Binding Rank}" 
                                                            FontSize="14" 
                                                            FontWeight="Bold" 
@@ -294,7 +541,7 @@
                                                            Foreground="{DynamicResource SubTextBrush}"/>
                                             </StackPanel>
 
-                                            <!-- Launch Count -->
+                                            <!-- Launch Count with Gradient -->
                                             <StackPanel Grid.Column="2" 
                                                         Orientation="Horizontal" 
                                                         VerticalAlignment="Center">
@@ -303,8 +550,14 @@
                                                            Foreground="{DynamicResource SubTextBrush}"/>
                                                 <TextBlock Text="{Binding LaunchCount}" 
                                                            FontSize="18" 
-                                                           FontWeight="Bold" 
-                                                           Foreground="{DynamicResource PrimaryBrush}"/>
+                                                           FontWeight="Bold">
+                                                    <TextBlock.Foreground>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </TextBlock.Foreground>
+                                                </TextBlock>
                                             </StackPanel>
                                         </Grid>
                                     </Border>
@@ -314,13 +567,52 @@
                     </Border>
 
                     <!-- Game Distribution -->
-                    <TextBlock Text="Game Distribution" Style="{StaticResource SectionTitle}" Margin="0,10,0,15"/>
+                    <TextBlock Style="{StaticResource SectionTitle}" Margin="0,10,0,15">
+                        <TextBlock.Text>Game Distribution</TextBlock.Text>
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="GameDistGradient"
+                                                 StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="GameDistGradientTranslate" X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.8"/>
+                        </TextBlock.Effect>
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="GameDistGradientTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
                     <Border Background="{DynamicResource SurfaceBrush}" 
-                            BorderBrush="{DynamicResource BorderBrush}" 
+                            BorderBrush="{DynamicResource SurfaceBrush}" 
                             BorderThickness="1" 
                             CornerRadius="8" 
                             Padding="20"
-                            Margin="0,0,0,20"
+                            Margin="0,0,0,30"
                             Width="840">
                         <ItemsControl x:Name="GameDistributionListBox">
                             <ItemsControl.ItemTemplate>
@@ -340,26 +632,34 @@
                                                    Foreground="{DynamicResource TextBrush}"
                                                    VerticalAlignment="Center"/>
 
-                                        <!-- Progress Bar -->
-                                        <Border Grid.Column="1" 
-                                                Height="20" 
-                                                Background="{DynamicResource BorderBrush}" 
-                                                CornerRadius="10"
-                                                Margin="10,0,10,0">
-                                            <Border HorizontalAlignment="Left" 
-                                                    Width="{Binding BarWidthFull}" 
-                                                    Background="{DynamicResource PrimaryBrush}" 
-                                                    CornerRadius="10"/>
+                                        <!-- Progress Bar with Gradient -->
+                                        <Border Grid.Column="1"
+        Height="20"
+        Background="{DynamicResource SurfaceBrush}"
+        CornerRadius="10"
+        Margin="10,0,10,0"
+        ClipToBounds="True">
+
+                                            <Border
+        HorizontalAlignment="Left"
+        Width="{Binding BarWidthFull}"
+        Style="{StaticResource AnimatedProgressFill}" />
                                         </Border>
 
-                                        <!-- Percentage -->
+                                        <!-- Percentage with Gradient -->
                                         <TextBlock Grid.Column="2" 
                                                    Text="{Binding PercentageText}" 
                                                    FontSize="14" 
                                                    FontWeight="Bold" 
-                                                   Foreground="{DynamicResource PrimaryBrush}"
                                                    HorizontalAlignment="Right"
-                                                   VerticalAlignment="Center"/>
+                                                   VerticalAlignment="Center">
+                                            <TextBlock.Foreground>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </TextBlock.Foreground>
+                                        </TextBlock>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -367,20 +667,59 @@
                     </Border>
 
                     <!-- Recent Activity -->
-                    <TextBlock Text="Recent Activity" Style="{StaticResource SectionTitle}" Margin="0,10,0,15"/>
+                    <TextBlock Style="{StaticResource SectionTitle}" Margin="0,10,0,15">
+                        <TextBlock.Text>Recent Activity</TextBlock.Text>
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush x:Name="RecentActivityGradient"
+                                                 StartPoint="0,0"
+                                                 EndPoint="1,0"
+                                                 SpreadMethod="Repeat">
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform x:Name="RecentActivityGradientTranslate" X="0"/>
+                                        <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.8"/>
+                        </TextBlock.Effect>
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="RecentActivityGradientTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
                     <Border Background="{DynamicResource SurfaceBrush}" 
-                            BorderBrush="{DynamicResource BorderBrush}" 
+                            BorderBrush="{DynamicResource SurfaceBrush}" 
                             BorderThickness="1" 
                             CornerRadius="8" 
                             Padding="15">
                         <ItemsControl x:Name="RecentActivityListBox">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="Transparent" 
-                                            BorderBrush="{DynamicResource BorderBrush}" 
-                                            BorderThickness="0,0,0,1" 
-                                            Padding="10,12"
-                                            Margin="0,0,0,0">
+                                    <Border Background="Transparent"
+                                            BorderBrush="{DynamicResource SurfaceBrush}" 
+                                        BorderThickness="0,0,0,1" 
+                                        Padding="10,12"
+                                        Margin="0,0,0,0">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -389,20 +728,20 @@
 
                                             <StackPanel Grid.Column="0">
                                                 <TextBlock Text="{Binding LauncherName}" 
-                                                           FontSize="14" 
-                                                           FontWeight="SemiBold" 
-                                                           Foreground="{DynamicResource TextBrush}"/>
+                                                       FontSize="14" 
+                                                       FontWeight="SemiBold" 
+                                                       Foreground="{DynamicResource TextBrush}"/>
                                                 <TextBlock Text="{Binding GameType}" 
-                                                           FontSize="11" 
-                                                           Foreground="{DynamicResource SubTextBrush}"
-                                                           Margin="0,2,0,0"/>
+                                                       FontSize="11" 
+                                                       Foreground="{DynamicResource SubTextBrush}"
+                                                       Margin="0,2,0,0"/>
                                             </StackPanel>
 
                                             <TextBlock Grid.Column="1" 
-                                                       Text="{Binding TimeAgo}" 
-                                                       FontSize="12" 
-                                                       Foreground="{DynamicResource SubTextBrush}"
-                                                       VerticalAlignment="Center"/>
+                                                   Text="{Binding TimeAgo}" 
+                                                   FontSize="12" 
+                                                   Foreground="{DynamicResource SubTextBrush}"
+                                                   VerticalAlignment="Center"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
