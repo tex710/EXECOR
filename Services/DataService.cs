@@ -18,7 +18,7 @@ namespace HackHelper.Services
         private static readonly string PasswordsFile = Path.Combine(AppDataFolder, "passwords.dat");
         private static readonly string SettingsFile = Path.Combine(AppDataFolder, "settings.json");
         private static readonly string CustomThemesFile = Path.Combine(AppDataFolder, "customThemes.json");
-        private const string MasterPassword = "Admin.MadeByClaude123!";
+        
 
         public DataService()
         {
@@ -67,7 +67,7 @@ namespace HackHelper.Services
             try
             {
                 string encryptedData = File.ReadAllText(PasswordsFile);
-                string decryptedJson = EncryptionService.Decrypt(encryptedData, MasterPassword);
+                string decryptedJson = EncryptionService.Decrypt(encryptedData);
                 return JsonConvert.DeserializeObject<List<PasswordEntry>>(decryptedJson) ?? new List<PasswordEntry>();
             }
             catch
@@ -79,7 +79,7 @@ namespace HackHelper.Services
         public void SavePasswords(List<PasswordEntry> passwords)
         {
             string json = JsonConvert.SerializeObject(passwords, Formatting.Indented);
-            string encryptedData = EncryptionService.Encrypt(json, MasterPassword);
+            string encryptedData = EncryptionService.Encrypt(json);
             File.WriteAllText(PasswordsFile, encryptedData);
         }
 
