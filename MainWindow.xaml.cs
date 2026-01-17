@@ -15,6 +15,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace HackHelper
@@ -46,6 +47,7 @@ namespace HackHelper
         private Launcher selectedLauncher = null;
         private PasswordEntry selectedPassword = null;
         private SteamAccount selectedSteamAccount = null;
+        
 
         public MainWindow()
         {
@@ -236,6 +238,26 @@ namespace HackHelper
                 PinLoaderButton.Content = selectedSteamAccount.IsPinned ? "📌 Unpin" : "📌 Pin";
             else
                 PinLoaderButton.Content = "📌 Pin";
+        }
+
+        public void UpdateRPCStatus(bool isEnabled)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                // Find the ellipse in the button's template
+                var ellipse = FindVisualChild<Ellipse>(DiscordRPCButton);
+                if (ellipse != null)
+                {
+                    if (isEnabled)
+                    {
+                        ellipse.Fill = new SolidColorBrush(Color.FromRgb(67, 181, 129)); // Green
+                    }
+                    else
+                    {
+                        ellipse.Fill = new SolidColorBrush(Color.FromRgb(128, 128, 128)); // Gray
+                    }
+                }
+            });
         }
 
         private void ClearSelection()
@@ -474,6 +496,9 @@ namespace HackHelper
 
         private void ThemeEditor_Click(object sender, RoutedEventArgs e)
             => new ThemeEditorWindow { Owner = this }.ShowDialog();
+
+        private void RPCWindow_Click(object sender, RoutedEventArgs e)
+            => new DiscordRPCWindow { Owner = this }.ShowDialog();
         #endregion
 
         #region Helper
@@ -482,6 +507,22 @@ namespace HackHelper
             var orig = btn.Content; btn.Content = "✓";
             await Task.Delay(1000);
             btn.Content = orig;
+        }
+
+        // Helper method to find child elements in visual tree
+        private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T typedChild)
+                    return typedChild;
+
+                var childOfChild = FindVisualChild<T>(child);
+                if (childOfChild != null)
+                    return childOfChild;
+            }
+            return null;
         }
         #endregion
     }

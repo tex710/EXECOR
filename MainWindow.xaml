@@ -1532,6 +1532,120 @@
                         <Button Content="🎨 Theme Editor"
                                 Style="{StaticResource SidebarButton}"
                                 Click="ThemeEditor_Click"/>
+                        <Button x:Name="DiscordRPCButton"
+        Background="{DynamicResource SurfaceBrush}"
+        Foreground="{DynamicResource TextBrush}"
+        BorderThickness="0"
+        Padding="15,10"
+        Cursor="Hand"
+        FontWeight="SemiBold"
+        HorizontalContentAlignment="Left"
+        Margin="0,0,0,8"
+        Click="RPCWindow_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                        <StackPanel Orientation="Horizontal" Margin="2,0,0,0">
+                                            <!-- Gradient Border around indicator -->
+                                            <Border Width="14" 
+                            Height="14" 
+                            CornerRadius="7" 
+                            BorderThickness="2"
+                            Margin="0,0,4,0"
+                            VerticalAlignment="Center">
+                                                <Border.BorderBrush>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                        <LinearGradientBrush.RelativeTransform>
+                                                            <TransformGroup>
+                                                                <TranslateTransform X="0"/>
+                                                                <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                                            </TransformGroup>
+                                                        </LinearGradientBrush.RelativeTransform>
+                                                    </LinearGradientBrush>
+                                                </Border.BorderBrush>
+                                                <Border.Effect>
+                                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="8"
+                                              ShadowDepth="0"
+                                              Opacity="0.6"/>
+                                                </Border.Effect>
+                                                <Border.Triggers>
+                                                    <EventTrigger RoutedEvent="Loaded">
+                                                        <BeginStoryboard>
+                                                            <Storyboard RepeatBehavior="Forever">
+                                                                <DoubleAnimation
+                                            Storyboard.TargetProperty="(Border.BorderBrush).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                </Border.Triggers>
+
+                                                <!-- Indicator -->
+                                                <Ellipse x:Name="RPCStatusIndicator" 
+                                 Width="10" 
+                                 Height="10" 
+                                 Fill="#808080"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Text -->
+                                            <TextBlock Text="Discord RPC" 
+                               FontWeight="{TemplateBinding FontWeight}"
+                               VerticalAlignment="Center">
+                                                <TextBlock.Foreground>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" SpreadMethod="Repeat">
+                                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                        <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
+                                                        <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                                                        <LinearGradientBrush.RelativeTransform>
+                                                            <TransformGroup>
+                                                                <TranslateTransform X="0"/>
+                                                                <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
+                                                            </TransformGroup>
+                                                        </LinearGradientBrush.RelativeTransform>
+                                                    </LinearGradientBrush>
+                                                </TextBlock.Foreground>
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect Color="{DynamicResource PrimaryColor}"
+                                              BlurRadius="10"
+                                              ShadowDepth="0"
+                                              Opacity="0.6"/>
+                                                </TextBlock.Effect>
+                                                <TextBlock.Triggers>
+                                                    <EventTrigger RoutedEvent="Loaded">
+                                                        <BeginStoryboard>
+                                                            <Storyboard RepeatBehavior="Forever">
+                                                                <DoubleAnimation
+                                            Storyboard.TargetProperty="(TextBlock.Foreground).(LinearGradientBrush.RelativeTransform).(TransformGroup.Children)[0].X"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1.2"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                </TextBlock.Triggers>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </StackPanel>
                 </Border>
             </Grid>
