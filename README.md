@@ -18,7 +18,7 @@ A great quality of life application for any cheat connoisseur
 ## About
 Execor came to life in a random realization that I have never seen a single app designed for people to universally manage their cheat loaders, forum logins, and steam accounts, etc (more to come)
 
-I never have and most likey never will have the intention of sitting here and actually coding this myself. This is PURELY a project of enterainment to myself. This application was "vibe coded". I wanna say 90% of the code is written by various AI tools, the other 10% was debugging I guess. It all sparked from a single moment when I had no internet connection and I suddenly wanted to build a password manager, then the other feature where added over time
+This is PURELY a project of enterainment to myself. It all sparked from a single moment when I had no internet connection and I suddenly wanted to build a password manager, then the other feature where added over time. 
 
 ***If you have any questions, concerns, or suggestions you can join the [Execor](https://discord.gg/WPBWY6pnrj) discord server***
 
