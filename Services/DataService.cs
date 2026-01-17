@@ -9,23 +9,14 @@ namespace HackHelper.Services
 {
     public class DataService
     {
-        private static readonly string AppDataFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "LauncherLoader"
-        );
-
-        private static readonly string LaunchersFile = Path.Combine(AppDataFolder, "launchers.json");
-        private static readonly string PasswordsFile = Path.Combine(AppDataFolder, "passwords.dat");
-        private static readonly string SettingsFile = Path.Combine(AppDataFolder, "settings.json");
-        private static readonly string CustomThemesFile = Path.Combine(AppDataFolder, "customThemes.json");
+        private static readonly string LaunchersFile = Path.Combine(PathManager.AppDataFolder, "launchers.json");
+        private static readonly string PasswordsFile = Path.Combine(PathManager.AppDataFolder, "passwords.dat");
+        private static readonly string SettingsFile = Path.Combine(PathManager.AppDataFolder, "settings.json");
+        private static readonly string CustomThemesFile = Path.Combine(PathManager.AppDataFolder, "customThemes.json");
         
 
         public DataService()
         {
-            if (!Directory.Exists(AppDataFolder))
-            {
-                Directory.CreateDirectory(AppDataFolder);
-            }
         }
 
         // Launcher methods

@@ -11,27 +11,14 @@ namespace HackHelper.Services
 {
     public class SteamAccountManager
     {
-        private static readonly string AppDataFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "EXECOR"
-        );
-        private static readonly string AccountsFile = Path.Combine(AppDataFolder, "steam_accounts.dat");
+        private static readonly string AccountsFile = Path.Combine(PathManager.AppDataFolder, "steam_accounts.dat");
 
 
         private List<SteamAccount> _accounts = new List<SteamAccount>();
 
         public SteamAccountManager()
         {
-            EnsureAppDataFolderExists();
             LoadAccounts();
-        }
-
-        private void EnsureAppDataFolderExists()
-        {
-            if (!Directory.Exists(AppDataFolder))
-            {
-                Directory.CreateDirectory(AppDataFolder);
-            }
         }
 
         // Get all accounts

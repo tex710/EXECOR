@@ -1646,6 +1646,10 @@
                                 </Style>
                             </Button.Style>
                         </Button>
+
+                        <Button Content="🏷️ Steam Sale Tracker"
+                            Style="{StaticResource SidebarButton}"
+                            Click="SaleTracker_Click"/>
                     </StackPanel>
                 </Border>
             </Grid>
