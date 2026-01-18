@@ -67,21 +67,36 @@ After installation, you can launch Execor and begin importing your executables a
 ## Screenshots
 
 **Showcase:**
-<img width="1111" height="662" alt="Image" src="https://github.com/user-attachments/assets/6728618b-c73c-4dcb-adf8-9f4ce5bbde1d" />
-<img width="1117" height="665" alt="Image" src="https://github.com/user-attachments/assets/82fc275d-38e9-4441-8845-3e0444a4a32c" />
-<img width="1113" height="665" alt="Image" src="https://github.com/user-attachments/assets/c3b0bbd3-e4b9-4af7-a2c4-f2bb4b5f6850" />
-<img width="904" height="705" alt="Image" src="https://github.com/user-attachments/assets/12bc8c19-d760-462e-8731-c007a750039b" />
-<img width="910" height="716" alt="Image" src="https://github.com/user-attachments/assets/1bb9ca9f-a37c-49d5-a220-0041380580ee" />
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6728618b-c73c-4dcb-adf8-9f4ce5bbde1d" width="45%" />
+  <img src="https://github.com/user-attachments/assets/82fc275d-38e9-4441-8845-3e0444a4a32c" width="45%" />
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c3b0bbd3-e4b9-4af7-a2c4-f2bb4b5f6850" width="45%" />
+  <img src="https://github.com/user-attachments/assets/12bc8c19-d760-462e-8731-c007a750039b" width="45%" />
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1bb9ca9f-a37c-49d5-a220-0041380580ee" width="45%" />
+</p>
 
 **Themes:**
-<img width="1114" height="664" alt="Image" src="https://github.com/user-attachments/assets/591218e5-12aa-462d-bd5e-8e6e6415d8c7" />
-<img width="1115" height="656" alt="Image" src="https://github.com/user-attachments/assets/1921b6c9-cec4-4bed-8dad-44159a82c07e" />
-<img width="1117" height="668" alt="Image" src="https://github.com/user-attachments/assets/1d2bbe2e-1709-44c0-b530-ca8f009cbdfb" />
-<img width="1115" height="662" alt="Image" src="https://github.com/user-attachments/assets/7946bd0c-73da-4526-825c-8abfd8fbfd75" />
-<img width="1113" height="669" alt="Image" src="https://github.com/user-attachments/assets/908b78d4-39ed-4167-95c1-2a4a55f637bd" />
-<img width="1117" height="669" alt="Image" src="https://github.com/user-attachments/assets/14408c25-16b1-4314-be62-4e847194b56e" />
-<img width="1122" height="663" alt="Image" src="https://github.com/user-attachments/assets/667a36ab-2a0a-4d14-80fd-6245b35db249" />
-<img width="1114" height="670" alt="Image" src="https://github.com/user-attachments/assets/864b3bf0-14a9-4f57-b33a-f9f3fb4ad2d5" />
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/591218e5-12aa-462d-bd5e-8e6e6415d8c7" width="30%" />
+  <img src="https://github.com/user-attachments/assets/1921b6c9-cec4-4bed-8dad-44159a82c07e" width="30%" />
+  <img src="https://github.com/user-attachments/assets/1d2bbe2e-1709-44c0-b530-ca8f009cbdfb" width="30%" />
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7946bd0c-73da-4526-825c-8abfd8fbfd75" width="30%" />
+  <img src="https://github.com/user-attachments/assets/908b78d4-39ed-4167-95c1-2a4a55f637bd" width="30%" />
+  <img src="https://github.com/user-attachments/assets/14408c25-16b1-4314-be62-4e847194b56e" width="30%" />
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/667a36ab-2a0a-4d14-80fd-6245b35db249" width="30%" />
+  <img src="https://github.com/user-attachments/assets/864b3bf0-14a9-4f57-b33a-f9f3fb4ad2d5" width="30%" />
+</p>
+
 
 ---
 
