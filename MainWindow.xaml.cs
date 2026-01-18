@@ -500,8 +500,7 @@ namespace HackHelper
         private void RPCWindow_Click(object sender, RoutedEventArgs e)
             => new DiscordRPCWindow { Owner = this }.ShowDialog();
 
-        private void SaleTracker_Click(object sender, RoutedEventArgs e)
-            => new SaleTrackerWindow { Owner = this }.ShowDialog();
+        
         #endregion
 
         #region Helper
