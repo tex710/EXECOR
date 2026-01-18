@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HackHelper.Models
+namespace Execor.Models
 {
     public enum ToastType
     {

@@ -1,10 +1,10 @@
-﻿using HackHelper.Models;
+﻿using Execor.Models;
 using System;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
-namespace HackHelper
+namespace Execor
 {
     public partial class ToastWindow : Window
     {

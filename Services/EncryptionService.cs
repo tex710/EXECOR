@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public class EncryptionService
     {

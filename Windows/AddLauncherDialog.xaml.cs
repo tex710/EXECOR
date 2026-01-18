@@ -3,10 +3,10 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
-using HackHelper.Services;
-using HackHelper.Models;
+using Execor.Services;
+using Execor.Models;
 
-namespace HackHelper
+namespace Execor
 {
     public partial class AddLauncherDialog : Window
     {

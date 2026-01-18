@@ -1,10 +1,10 @@
-﻿using HackHelper.Models;
+﻿using Execor.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public class ThemeManager
     {

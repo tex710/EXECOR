@@ -8,7 +8,7 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json.Linq;
 
-namespace HackHelper.Converters
+namespace Execor.Converters
 {
     public class SteamAvatarConverter : IValueConverter
     {
@@ -169,7 +169,7 @@ namespace HackHelper.Converters
                 Debug.WriteLine("[SteamAvatarConverter] Creating default Steam icon");
                 var bitmap = new BitmapImage();
                 bitmap.BeginInit();
-                bitmap.UriSource = new Uri("pack://application:,,,/HackHelper;component/Resources/steam_default.png", UriKind.Absolute);
+                bitmap.UriSource = new Uri("pack://application:,,,/Execor;component/Resources/steam_default.png", UriKind.Absolute);
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.EndInit();
                 bitmap.Freeze();

@@ -1,5 +1,5 @@
-﻿using HackHelper.Models;
-using HackHelper.Services;
+﻿using Execor.Models;
+using Execor.Services;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace HackHelper
+namespace Execor
 {
     public class EmptyStringToVisibilityConverter : IValueConverter
     {

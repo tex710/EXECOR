@@ -1,5 +1,5 @@
-﻿using HackHelper.Models;
-using HackHelper.Services;
+﻿using Execor.Models;
+using Execor.Services;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 
-namespace HackHelper
+namespace Execor
 {
     public partial class AddPasswordDialog : Window
     {

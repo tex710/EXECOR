@@ -1,12 +1,12 @@
-﻿using HackHelper.Models;
-using HackHelper.Services;
+﻿using Execor.Models;
+using Execor.Services;
 using Microsoft.Win32;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace HackHelper
+namespace Execor
 {
     public partial class SettingsWindow : Window
     {
@@ -85,7 +85,7 @@ namespace HackHelper
 
         private void ApplyStartupSetting()
         {
-            string appName = "HackHelper";
+            string appName = "Execor";
             string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe");
 
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))

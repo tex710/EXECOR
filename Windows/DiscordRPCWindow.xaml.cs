@@ -5,7 +5,7 @@ using System.Windows.Media;
 using DiscordRPC;
 using DiscordRPC.Logging;
 
-namespace HackHelper
+namespace Execor
 {
     public partial class DiscordRPCWindow : Window
     {

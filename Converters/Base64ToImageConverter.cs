@@ -3,9 +3,9 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.ComponentModel;
-using HackHelper.Services;
+using Execor.Services;
 
-namespace HackHelper.Converters
+namespace Execor.Converters
 {
     public class Base64ToImageConverter : IValueConverter
     {

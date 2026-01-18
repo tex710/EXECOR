@@ -1,11 +1,11 @@
-﻿using HackHelper.Models;
+﻿using Execor.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public class DataService
     {

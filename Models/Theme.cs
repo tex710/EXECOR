@@ -1,4 +1,4 @@
-﻿namespace HackHelper.Models
+﻿namespace Execor.Models
 {
     public class Theme
     {

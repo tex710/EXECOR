@@ -1,4 +1,4 @@
-﻿<Window x:Class="HackHelper.AddSteamAccountWindow"
+﻿<Window x:Class="Execor.AddSteamAccountWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Add Steam Account" 

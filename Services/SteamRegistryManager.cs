@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public class SteamRegistryManager
     {

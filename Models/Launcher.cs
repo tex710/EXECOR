@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HackHelper.Models
+namespace Execor.Models
 {
     public class Launcher
     {

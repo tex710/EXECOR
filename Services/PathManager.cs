@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public static class PathManager
     {

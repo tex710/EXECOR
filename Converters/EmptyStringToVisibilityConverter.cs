@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace HackHelper.Converters
+namespace Execor.Converters
 {
     public class EmptyStringToVisibilityConverter : IValueConverter
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using HackHelper.Models;
+using Execor.Models;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public class SteamAccountManager
     {

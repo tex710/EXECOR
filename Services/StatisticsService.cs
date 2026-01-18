@@ -1,9 +1,9 @@
-﻿using HackHelper.Models;
+﻿using Execor.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public class StatisticsService
     {

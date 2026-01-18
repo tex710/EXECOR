@@ -1,10 +1,10 @@
-﻿using HackHelper.Models;
+﻿using Execor.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public static class ToastService
     {

@@ -1,5 +1,5 @@
-﻿using HackHelper.Models;
-using HackHelper.Services;
+﻿using Execor.Models;
+using Execor.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace HackHelper
+namespace Execor
 {
     public partial class ThemeEditorWindow : Window
     {

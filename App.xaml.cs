@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace HackHelper
+namespace Execor
 {
     /// <summary>
     /// Interaction logic for App.xaml

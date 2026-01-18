@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace HackHelper.Services
+namespace Execor.Services
 {
     public static class SteamLoginInjector
     {
