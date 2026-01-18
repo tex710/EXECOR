@@ -7,7 +7,7 @@ A streamlined and secure application for managing your gaming utilities, credent
 ## Table of Contents
 - [About](#about)
 - [Features](#features)
-- [Installation](#installation)
+- [Installation](#installation-windows-only)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
