@@ -176,6 +176,68 @@
             </Setter>
         </Style>
 
+        <Style x:Key="MainTabStyle" TargetType="TabItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Border"
+                Background="{DynamicResource SurfaceBrush}"
+                CornerRadius="6,6,0,0"
+                Padding="20,10"
+                Margin="0,0,5,0">
+                            <Grid>
+                                <!-- Normal Text -->
+                                <TextBlock x:Name="HeaderText"
+                           Text="{TemplateBinding Header}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+
+                                <!-- Glow Text (hidden by default) -->
+                                <TextBlock x:Name="GlowText"
+                           Text="{TemplateBinding Header}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextBrush}">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect x:Name="GlowEffect"
+                                          Color="White"
+                                          BlurRadius="12"
+                                          ShadowDepth="1"
+                                          Opacity="1"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Selected Tab: show glow -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+
+                                <Setter TargetName="GlowText" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+
+                            <!-- Unselected Tab: hide glow -->
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                                <Setter TargetName="GlowText" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Button Style -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
