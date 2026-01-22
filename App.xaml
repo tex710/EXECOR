@@ -41,5 +41,68 @@
         <SolidColorBrush x:Key="SubTextBrush"
                          Color="{StaticResource SubTextColor}" />
 
+
+        
+
+        <!-- ComboBoxItem Style -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border 
+Name="Border"
+Background="{TemplateBinding Background}"
+BorderThickness="0"
+CornerRadius="4"
+Padding="{TemplateBinding Padding}"
+Margin="2">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{DynamicResource PrimaryColor}" Offset="0"/>
+                                            <GradientStop Color="{DynamicResource SecondaryColor}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="WidgetConfigTemplate">
+            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" Padding="5" Margin="0,0,0,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding WidgetType}" Grid.Column="1" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                    <Slider Grid.Column="2" Width="100" Minimum="0.1" Maximum="1.0" Value="{Binding Opacity}"
+                            IsSnapToTickEnabled="True" TickFrequency="0.1" SmallChange="0.1" LargeChange="0.1"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
     </Application.Resources>
 </Application>
