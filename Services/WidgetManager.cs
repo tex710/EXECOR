@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Execor.Widgets;
 
 namespace Execor.Services
 {
@@ -18,7 +19,7 @@ namespace Execor.Services
         private bool _isEditMode;
 
         // Keep track of the currently dragged widget
-        private UIElement _draggingWidget = null;
+        private FrameworkElement _draggingWidget = null;
         private Point _dragStartPoint;
 
         public event Action<List<WidgetConfig>> WidgetsUpdated; // Event to notify parent window of changes
@@ -37,7 +38,7 @@ namespace Execor.Services
             _isEditMode = isEditMode;
             foreach (UIElement child in _overlayCanvas.Children)
             {
-                child.IsHitTestVisible = isEditMode; 
+                child.IsHitTestVisible = isEditMode;
                 // If it's a CustomMessageWidget, toggle its internal edit state
                 if (child is CustomMessageWidget messageWidget)
                 {
@@ -65,7 +66,7 @@ namespace Execor.Services
 
             foreach (var config in _widgetConfigs.Where(w => w.IsEnabled))
             {
-                UIElement widget = CreateWidgetInstance(config);
+                FrameworkElement widget = CreateWidgetInstance(config);
                 if (widget != null)
                 {
                     // Set common properties
@@ -85,7 +86,7 @@ namespace Execor.Services
             }
         }
 
-        private UIElement CreateWidgetInstance(WidgetConfig config)
+        private FrameworkElement CreateWidgetInstance(WidgetConfig config)
         {
             // This is a factory method that will create different UserControls
             // based on config.WidgetType. For now, a placeholder.
@@ -107,10 +108,10 @@ namespace Execor.Services
             }
         }
 
-        private void AttachDragHandlers(UIElement widget, WidgetConfig config)
+        private void AttachDragHandlers(FrameworkElement widget, WidgetConfig config)
         {
             // Store config with the UIElement to retrieve it during drag operations
-            widget.Tag = config; 
+            widget.Tag = config;
             widget.MouseLeftButtonDown += Widget_MouseLeftButtonDown;
             // widget.MouseRightButtonDown += Widget_MouseRightButtonDown; // For context menu/config
         }
@@ -124,8 +125,8 @@ namespace Execor.Services
             var hitTestResult = VisualTreeHelper.HitTest(_overlayCanvas, e.GetPosition(_overlayCanvas));
             if (hitTestResult != null && hitTestResult.VisualHit is FrameworkElement element && element.Tag is WidgetConfig)
             {
-                 // Find the actual top-level widget element (UserControl or whatever wraps the content)
-                 // This might need refinement based on how actual widgets are structured
+                // Find the actual top-level widget element (UserControl or whatever wraps the content)
+                // This might need refinement based on how actual widgets are structured
                 _draggingWidget = FindParentWidget(element);
                 if (_draggingWidget != null)
                 {
@@ -136,7 +137,7 @@ namespace Execor.Services
         }
 
         // Helper to find the actual widget control that has the WidgetConfig tag
-        private UIElement FindParentWidget(FrameworkElement element)
+        private FrameworkElement FindParentWidget(FrameworkElement element)
         {
             FrameworkElement current = element;
             while (current != null && !(current.Tag is WidgetConfig))
@@ -174,7 +175,7 @@ namespace Execor.Services
             if (_draggingWidget != null)
             {
                 _draggingWidget.ReleaseMouseCapture();
-                
+
                 // Update the position in the WidgetConfig and save
                 if (_draggingWidget.Tag is WidgetConfig config)
                 {

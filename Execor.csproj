@@ -1,10 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
 		<Nullable>disable</Nullable>
-		<TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-		<SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -14,6 +12,9 @@
 	<ItemGroup>
 	  <Compile Remove="Windows\EditLauncherDialog.xaml.cs" />
 	  <Compile Remove="Windows\EditPasswordDialog.xaml.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Resources\steam_default.png" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Remove="Windows\EditLauncherDialog.xaml" />
@@ -32,21 +33,17 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
-		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.26100.7463" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Drawing.Common" Version="10.0.1" />
+		<PackageReference Include="System.Management" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Properties\PublishProfiles\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Reference Include="Windows.Foundation.FoundationContract">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Windows Kits\10\References\10.0.26100.0\Windows.Foundation.FoundationContract\4.0.0.0\Windows.Foundation.FoundationContract.winmd</HintPath>
-	    <IsWinMDFile>true</IsWinMDFile>
-	  </Reference>
-	  <Reference Include="Windows.Foundation.UniversalApiContract">
-	    <HintPath>..\..\..\..\..\Program Files (x86)\Windows Kits\10\References\10.0.26100.0\Windows.Foundation.UniversalApiContract\19.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
-	    <IsWinMDFile>true</IsWinMDFile>
-	  </Reference>
+	  <Resource Include="Resources\steam_default.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
 	</ItemGroup>
+	
 </Project>

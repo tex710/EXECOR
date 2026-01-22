@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 using Windows.Media.Control; // Requires specific Windows SDK references
+using System.IO;
 
 namespace Execor.Widgets
 {

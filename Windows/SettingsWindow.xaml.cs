@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input; // Added for Key and KeyInterop
 using System.Windows.Interop; // Added for HwndSource
+using System.Windows.Input;
+using System.IO;
 
 namespace Execor
 {
@@ -222,7 +224,7 @@ namespace Execor
 
             if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN)
             {
-                Key key = (Key)KeyInterop.VirtualKeyFromWin32(wParam.ToInt32());
+                Key key = KeyInterop.KeyFromVirtualKey(wParam.ToInt32());
 
                 // Check for modifier keys
                 bool ctrl = (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
@@ -277,6 +279,12 @@ namespace Execor
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }
