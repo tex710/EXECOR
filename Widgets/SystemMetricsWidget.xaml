@@ -1,0 +1,48 @@
+<UserControl x:Class="Execor.Widgets.SystemMetricsWidget"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Execor.Widgets"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="250"
+             Unloaded="UserControl_Unloaded"> <!-- Added Unloaded event handler -->
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="10">
+        <StackPanel>
+            <TextBlock Text="System Metrics"
+                       Foreground="{DynamicResource TextBrush}"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10" />
+
+            <!-- CPU Metrics -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <TextBlock Text="CPU: " Foreground="{DynamicResource SubTextBrush}" />
+                <TextBlock x:Name="CpuUsageTextBlock" Text="0%" Foreground="{DynamicResource PrimaryBrush}" FontWeight="Bold" />
+            </StackPanel>
+
+            <!-- RAM Metrics -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <TextBlock Text="RAM: " Foreground="{DynamicResource SubTextBrush}" />
+                <TextBlock x:Name="RamUsageTextBlock" Text="0MB / 0MB (0%)" Foreground="{DynamicResource PrimaryBrush}" FontWeight="Bold" />
+            </StackPanel>
+
+            <!-- Network Metrics -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <TextBlock Text="Net Down: " Foreground="{DynamicResource SubTextBrush}" />
+                <TextBlock x:Name="NetDownTextBlock" Text="0 KB/s" Foreground="{DynamicResource PrimaryBrush}" FontWeight="Bold" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Net Up: " Foreground="{DynamicResource SubTextBrush}" />
+                <TextBlock x:Name="NetUpTextBlock" Text="0 KB/s" Foreground="{DynamicResource PrimaryBrush}" FontWeight="Bold" />
+            </StackPanel>
+            
+            <!-- GPU metrics can be added here later -->
+        </StackPanel>
+    </Border>
+</UserControl>

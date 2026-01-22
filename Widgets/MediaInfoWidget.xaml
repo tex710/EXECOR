@@ -1,0 +1,70 @@
+<UserControl x:Class="Execor.Widgets.MediaInfoWidget"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Execor.Widgets"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="300"
+             Unloaded="UserControl_Unloaded"> <!-- Added Unloaded event handler -->
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Album Art / Thumbnail -->
+            <Border Grid.Column="0" Grid.RowSpan="2"
+                    Width="80" Height="80"
+                    Background="{DynamicResource BackgroundBrush}"
+                    Margin="0,0,10,0"
+                    CornerRadius="4">
+                <Image x:Name="AlbumArtImage" Stretch="UniformToFill">
+                    <Image.Source>
+                        <!-- Default/Placeholder Image -->
+                        <BitmapImage UriSource="pack://application:,,,/Resources/steam_default.png"/>
+                    </Image.Source>
+                </Image>
+            </Border>
+
+            <!-- Track/Video Name -->
+            <TextBlock x:Name="TitleTextBlock"
+                       Grid.Column="1" Grid.Row="0"
+                       Text="No Media Playing"
+                       Foreground="{DynamicResource TextBrush}"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"/>
+
+            <!-- Artist / Channel Name -->
+            <TextBlock x:Name="ArtistTextBlock"
+                       Grid.Column="1" Grid.Row="1"
+                       Text=""
+                       Foreground="{DynamicResource SubTextBrush}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"/>
+
+            <!-- Playback Controls (Optional, for now just a placeholder) -->
+            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,10,0,0">
+                <Button Content="⏮" Style="{StaticResource IconButton}" Margin="0,0,5,0"/>
+                <Button Content="⏯" Style="{StaticResource IconButton}" Margin="0,0,5,0"/>
+                <Button Content="⏭" Style="{StaticResource IconButton}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

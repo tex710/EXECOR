@@ -1532,6 +1532,9 @@
                         <Button Content="🎨 Theme Editor"
                                 Style="{StaticResource SidebarButton}"
                                 Click="ThemeEditor_Click"/>
+                        <Button Content="⚙️ Overlay"
+                                Style="{StaticResource SidebarButton}"
+                                Click="OverlaySettings_Click"/>
                         <Button x:Name="DiscordRPCButton"
         Background="{DynamicResource SurfaceBrush}"
         Foreground="{DynamicResource TextBrush}"

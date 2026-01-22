@@ -465,128 +465,153 @@
             <!-- Settings Content -->
             <Grid Grid.Row="1" Margin="30">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel>
-                        <!-- App Behavior Section -->
-                        <TextBlock Text="App Behavior" FontSize="18" FontWeight="Bold" Margin="0,0,0,15">
-                            <TextBlock.Foreground>
-                                <LinearGradientBrush x:Name="AppBehaviorGradient"
-                             StartPoint="0,0"
-                             EndPoint="1,0"
-                             SpreadMethod="Repeat">
-                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
-                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
-                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TabControl Grid.Row="0" Margin="0,0,0,20">
+                            <!-- Tab for General App Behavior and Security Settings -->
+                            <TabItem Header="App Settings" Style="{StaticResource MainTabStyle}">
+                                <StackPanel Margin="10">
+                                    <!-- App Behavior Section -->
+                                    <TextBlock Text="App Behavior" FontSize="18" FontWeight="Bold" Margin="0,0,0,15" Foreground="{DynamicResource TextBrush}"/>
+                                    <CheckBox x:Name="LaunchOnStartupCheckBox" 
+                                              Content="Launch on Windows startup"/>
+                                    <CheckBox x:Name="MinimizeToTrayCheckBox" 
+                                              Content="Start minimized to system tray"/>
+                                    <CheckBox x:Name="ShowVersionCheckBox"
+                                              Content="Show version in title bar"
+                                              Margin="0,0,0,10"/>
+                                    <CheckBox x:Name="ShowToastCheckBox"
+                                              Content="Enable toast notifications" />
 
-                                    <LinearGradientBrush.RelativeTransform>
-                                        <TransformGroup>
-                                            <TranslateTransform x:Name="AppBehaviorGradientTranslate" X="0"/>
-                                            <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
-                                        </TransformGroup>
-                                    </LinearGradientBrush.RelativeTransform>
-                                </LinearGradientBrush>
-                            </TextBlock.Foreground>
+                                    <!-- Security Section -->
+                                    <TextBlock Text="Security" FontSize="18" FontWeight="Bold" Margin="0,20,0,15" Foreground="{DynamicResource TextBrush}"/>
+                                    <CheckBox x:Name="ClipboardAutoClearCheckBox" 
+                                              Content="Auto-clear clipboard after copying password"
+                                              Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,20">
+                                        <TextBlock Text="Timeout:" 
+                                                   Foreground="{DynamicResource SubTextBrush}" 
+                                                   FontWeight="Normal"
+                                                   VerticalAlignment="Center" 
+                                                   Margin="0,0,10,0"/>
+                                        <ComboBox x:Name="ClipboardTimeoutComboBox" Width="120">
+                                            <ComboBoxItem Content="10 seconds" Tag="10"/>
+                                            <ComboBoxItem Content="30 seconds" Tag="30"/>
+                                            <ComboBoxItem Content="60 seconds" Tag="60" IsSelected="True"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </TabItem>
 
-                            <TextBlock.Effect>
-                                <DropShadowEffect Color="{DynamicResource PrimaryColor}"
-                          BlurRadius="10"
-                          ShadowDepth="0"
-                          Opacity="0.8"/>
-                            </TextBlock.Effect>
+                            <!-- Tab for Overlay Settings -->
+                            <TabItem Header="Overlay Settings" Style="{StaticResource MainTabStyle}">
+                                <StackPanel Margin="10">
+                                    <!-- Global Overlay Settings -->
+                                    <TextBlock Text="Global Overlay" FontSize="18" FontWeight="Bold" Margin="0,0,0,15" Foreground="{DynamicResource TextBrush}"/>
+                                    <CheckBox x:Name="OverlayEnabledCheckBox" 
+                                              Content="Enable Overlay"
+                                              Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="Hotkey: " 
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,10,0"/>
+                                        <TextBox x:Name="OverlayHotkeyTextBox"
+                                                 Width="150"
+                                                 HorizontalAlignment="Left"
+                                                 Background="{DynamicResource SurfaceBrush}"
+                                                 BorderBrush="{DynamicResource BorderBrush}"
+                                                 BorderThickness="1"
+                                                 Foreground="{DynamicResource TextBrush}"
+                                                 Padding="5"
+                                                 IsReadOnly="True"
+                                                 GotFocus="OverlayHotkeyTextBox_GotFocus"
+                                                 LostFocus="OverlayHotkeyTextBox_LostFocus"
+                                                 KeyDown="OverlayHotkeyTextBox_KeyDown"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                        <TextBlock Text="Opacity: " 
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,10,0"/>
+                                        <Slider x:Name="OverlayOpacitySlider"
+                                                Width="200"
+                                                Minimum="0.1"
+                                                Maximum="1.0"
+                                                Value="0.8"
+                                                IsSnapToTickEnabled="True"
+                                                TickPlacement="BottomRight"
+                                                TickFrequency="0.05"
+                                                SmallChange="0.05"
+                                                LargeChange="0.1"
+                                                VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="OverlayOpacityValueTextBlock"
+                                                   Text="{Binding Value, ElementName=OverlayOpacitySlider, StringFormat={}{0:P0}}"
+                                                   VerticalAlignment="Center"
+                                                   Margin="10,0,0,0"
+                                                   Width="50"/>
+                                    </StackPanel>
 
-                            <TextBlock.Triggers>
-                                <EventTrigger RoutedEvent="Loaded">
-                                    <BeginStoryboard>
-                                        <Storyboard RepeatBehavior="Forever">
-                                            <DoubleAnimation
-                        Storyboard.TargetName="AppBehaviorGradientTranslate"
-                        Storyboard.TargetProperty="X"
-                        From="0"
-                        To="1"
-                        Duration="0:0:1.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </TextBlock.Triggers>
-                        </TextBlock>
-                        <CheckBox x:Name="LaunchOnStartupCheckBox" 
-                                  Content="Launch on Windows startup"/>
-                        <CheckBox x:Name="MinimizeToTrayCheckBox" 
-                                  Content="Start minimized to system tray"/>
-                        <CheckBox x:Name="ShowVersionCheckBox"
-                                  Content="Show version in title bar"
-                                  Margin="0,0,0,10"/>
-                        <CheckBox x:Name="ShowToastCheckBox"
-                                  Content="Enable toast notifications" />
+                                <!-- Auto-hide Settings -->
+                                <TextBlock Text="Auto-hide Overlay" FontSize="18" FontWeight="Bold" Margin="0,20,0,10" Foreground="{DynamicResource TextBrush}"/>
+                                <CheckBox x:Name="AutoHideOverlayCheckBox"
+                                          Content="Enable Auto-hide"
+                                          Margin="0,0,0,10"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="Inactivity Timeout (s): "
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,10,0"/>
+                                    <ComboBox x:Name="AutoHideTimeoutComboBox" Width="100" HorizontalAlignment="Left">
+                                        <ComboBoxItem Content="10" Tag="10"/>
+                                        <ComboBoxItem Content="20" Tag="20"/>
+                                        <ComboBoxItem Content="30" Tag="30" IsSelected="True"/>
+                                        <ComboBoxItem Content="60" Tag="60"/>
+                                        <ComboBoxItem Content="120" Tag="120"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,0,20">
+                                    <TextBlock Text="Hide for Applications (comma-separated EXE names):"
+                                               Margin="0,0,0,5"
+                                               Foreground="{DynamicResource SubTextBrush}"/>
+                                    <TextBox x:Name="AutoHideGamesTextBox"
+                                             Background="{DynamicResource SurfaceBrush}"
+                                             BorderBrush="{DynamicResource BorderBrush}"
+                                             BorderThickness="1"
+                                             Foreground="{DynamicResource TextBrush}"
+                                             Padding="5"
+                                             TextWrapping="Wrap"
+                                             Height="Auto"
+                                             MinHeight="30"/>
+                                </StackPanel>
 
-
-                        <!-- Security Section -->
-                        <TextBlock Text="Security" FontSize="18" FontWeight="Bold" Margin="0,20,0,15">
-                            <TextBlock.Foreground>
-                                <LinearGradientBrush x:Name="SecurityGradient"
-                             StartPoint="0,0"
-                             EndPoint="1,0"
-                             SpreadMethod="Repeat">
-                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
-                                    <GradientStop Color="{DynamicResource PrimaryColor}" Offset="1.0"/>
-                                    <GradientStop Color="{DynamicResource SecondaryColor}" Offset="0.3"/>
-
-                                    <LinearGradientBrush.RelativeTransform>
-                                        <TransformGroup>
-                                            <TranslateTransform x:Name="SecurityGradientTranslate" X="0"/>
-                                            <RotateTransform Angle="-40" CenterX="0.5" CenterY="0.5"/>
-                                        </TransformGroup>
-                                    </LinearGradientBrush.RelativeTransform>
-                                </LinearGradientBrush>
-                            </TextBlock.Foreground>
-
-                            <TextBlock.Effect>
-                                <DropShadowEffect Color="{DynamicResource PrimaryColor}"
-                          BlurRadius="10"
-                          ShadowDepth="0"
-                          Opacity="0.8"/>
-                            </TextBlock.Effect>
-
-                            <TextBlock.Triggers>
-                                <EventTrigger RoutedEvent="Loaded">
-                                    <BeginStoryboard>
-                                        <Storyboard RepeatBehavior="Forever">
-                                            <DoubleAnimation
-                        Storyboard.TargetName="SecurityGradientTranslate"
-                        Storyboard.TargetProperty="X"
-                        From="0"
-                        To="1"
-                        Duration="0:0:1.2"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </TextBlock.Triggers>
-                        </TextBlock>
-                        <CheckBox x:Name="ClipboardAutoClearCheckBox" 
-                                  Content="Auto-clear clipboard after copying password"
-                                  Margin="0,0,0,10"/>
-                        <StackPanel Orientation="Horizontal" Margin="20,0,0,20">
-                            <TextBlock Text="Timeout:" 
-                                       Foreground="{DynamicResource SubTextBrush}" 
-                                       FontWeight="Normal"
-                                       VerticalAlignment="Center" 
-                                       Margin="0,0,10,0"/>
-                            <ComboBox x:Name="ClipboardTimeoutComboBox" Width="120">
-                                <ComboBoxItem Content="10 seconds" Tag="10"/>
-                                <ComboBoxItem Content="30 seconds" Tag="30"/>
-                                <ComboBoxItem Content="60 seconds" Tag="60" IsSelected="True"/>
-                            </ComboBox>
-                        </StackPanel>
-
-                        
-                        <!-- Save Button -->
-                        <Button Content="💾 Save Settings" 
-                                Click="SaveSettings_Click" 
-                                HorizontalAlignment="Right"
-                                Margin="0,20,0,0"/>
-
-                        
-
-                    </StackPanel>
+                                <!-- Widget List and Configuration -->
+                                <TextBlock Text="Widgets" FontSize="18" FontWeight="Bold" Margin="0,20,0,10" Foreground="{DynamicResource TextBrush}"/>
+                                    <ItemsControl x:Name="WidgetConfigsListBox">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" Padding="5" Margin="0,0,0,5">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <CheckBox IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                                        <TextBlock Text="{Binding WidgetType}" Grid.Column="1" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                                                        <Slider Grid.Column="2" Width="100" Minimum="0.1" Maximum="1.0" Value="{Binding Opacity}"
+                                                                IsSnapToTickEnabled="True" TickFrequency="0.1" SmallChange="0.1" LargeChange="0.1"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </TabItem>
+                        </TabControl>
+                        <!-- Save Button outside TabControl but inside ScrollViewer -->
+                        <Button Grid.Row="1" Content="💾 Save Settings" Click="SaveSettings_Click" HorizontalAlignment="Right" Margin="0,20,0,0"/>
+                    </Grid>
                 </ScrollViewer>
             </Grid>
         </Grid>

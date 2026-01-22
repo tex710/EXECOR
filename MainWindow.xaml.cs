@@ -500,6 +500,19 @@ namespace Execor
         private void RPCWindow_Click(object sender, RoutedEventArgs e)
             => new DiscordRPCWindow { Owner = this }.ShowDialog();
 
+        private void OverlaySettings_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new SettingsWindow(this)
+            {
+                Owner = this
+            };
+            settingsWindow.ShowDialog();
+            // After settings are saved and the window is closed,
+            // the main window might need to refresh the overlay's state.
+            // For now, the OverlayWindow's hotkey registration logic will handle itself
+            // on next hotkey press, but a more direct refresh could be implemented here.
+        }
+
         
         #endregion
 
