@@ -1,4 +1,4 @@
-﻿using Execor.Models;
+using Execor.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,48 +18,48 @@ namespace Execor.Services
         private static readonly string SettingsFile = Path.Combine(PathManager.AppDataFolder, "settings.json");
                 private static readonly string CustomThemesFile = Path.Combine(PathManager.AppDataFolder, "customThemes.json");
                 private static readonly string OverlayProfilesFile = Path.Combine(PathManager.AppDataFolder, "overlayProfiles.json"); // New file for overlay profiles
-                
-        
+
+
                 public DataService()
                 {
                 }
-        
+
                 // Launcher methods
                 public List<Launcher> LoadLaunchers()
                 {
                     if (!File.Exists(LaunchersFile))
                         return new List<Launcher>();
-        
+
                     string json = File.ReadAllText(LaunchersFile);
                     return JsonConvert.DeserializeObject<List<Launcher>>(json) ?? new List<Launcher>();
                 }
-        
+
                 public void SaveLaunchers(List<Launcher> launchers)
                 {
                     string json = JsonConvert.SerializeObject(launchers, Formatting.Indented);
                     File.WriteAllText(LaunchersFile, json);
                 }
-        
+
                 public void UpdateLauncher(Launcher updatedLauncher)
                 {
                     var launchers = LoadLaunchers();
                     var index = launchers.FindIndex(l => l.Id == updatedLauncher.Id);
-        
+
                     if (index >= 0)
                     {
                         launchers[index] = updatedLauncher;
                         SaveLaunchers(launchers);
                     }
                 }
-        
-                
-        
+
+
+
                 // Password methods
                 public List<PasswordEntry> LoadPasswords()
                 {
                     if (!File.Exists(PasswordsFile))
                         return new List<PasswordEntry>();
-        
+
                     try
                     {
                         string encryptedData = File.ReadAllText(PasswordsFile);
@@ -71,26 +71,26 @@ namespace Execor.Services
                         return new List<PasswordEntry>();
                     }
                 }
-        
+
                 public void SavePasswords(List<PasswordEntry> passwords)
                 {
                     string json = JsonConvert.SerializeObject(passwords, Formatting.Indented);
                     string encryptedData = EncryptionService.Encrypt(json);
                     File.WriteAllText(PasswordsFile, encryptedData);
                 }
-        
+
                 public void UpdatePassword(PasswordEntry updatedPassword)
                 {
                     var passwords = LoadPasswords();
                     var index = passwords.FindIndex(p => p.Id == updatedPassword.Id);
-        
+
                     if (index >= 0)
                     {
                         passwords[index] = updatedPassword;
                         SavePasswords(passwords);
                     }
                 }
-        
+
                 // Settings methods
                 public Settings LoadSettings()
                 {
@@ -101,28 +101,33 @@ namespace Execor.Services
                             SelectedTheme = "Blue & Pink (Default)",
                             ClipboardAutoClear = true,
                             ClipboardTimeout = 30,
-                            LaunchOnStartup = false
+                            LaunchOnStartup = false,
+                            OverlayEnabled = false // Explicitly set to false
                         };
                         SaveSettings(defaultSettings);
+                        Console.WriteLine($"[DataService] Settings file not found. Creating new settings. OverlayEnabled: {defaultSettings.OverlayEnabled}");
                         return defaultSettings;
                     }
-        
+
                     string json = File.ReadAllText(SettingsFile);
-                    return JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
+                    var settings = JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
+                    Console.WriteLine($"[DataService] Loaded settings. OverlayEnabled: {settings.OverlayEnabled}");
+                    return settings;
                 }
-        
+
                 public void SaveSettings(Settings settings)
                 {
                     string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
                     File.WriteAllText(SettingsFile, json);
+                    Console.WriteLine($"[DataService] Saved settings. OverlayEnabled: {settings.OverlayEnabled}");
                 }
-        
+
                 // Custom Themes methods
                 public List<CustomTheme> LoadCustomThemes()
                 {
                     if (!File.Exists(CustomThemesFile))
                         return new List<CustomTheme>();
-        
+
                     try
                     {
                         string json = File.ReadAllText(CustomThemesFile);
@@ -133,13 +138,13 @@ namespace Execor.Services
                         return new List<CustomTheme>();
                     }
                 }
-        
+
                 public void SaveCustomThemes(List<CustomTheme> customThemes)
                 {
                     string json = JsonConvert.SerializeObject(customThemes, Formatting.Indented);
                     File.WriteAllText(CustomThemesFile, json);
                 }
-        
+
                 // Overlay Profile methods
                 public List<OverlayProfile> LoadOverlayProfiles()
                 {
@@ -156,7 +161,7 @@ namespace Execor.Services
                                         var profiles = new List<OverlayProfile> { defaultProfile };
                                         SaveOverlayProfiles(profiles);
                                         return profiles;                    }
-        
+
                     try
                     {
                         string json = File.ReadAllText(OverlayProfilesFile);
@@ -169,13 +174,13 @@ namespace Execor.Services
                         return new List<OverlayProfile> { new OverlayProfile { Name = "Default" } };
                     }
                 }
-        
+
                 public void SaveOverlayProfiles(List<OverlayProfile> profiles)
                 {
                     string json = JsonConvert.SerializeObject(profiles, Formatting.Indented);
                     File.WriteAllText(OverlayProfilesFile, json);
                 }
-        
+
                 public void TogglePasswordPin(string id)
                 {
                     var list = LoadPasswords();
@@ -186,7 +191,7 @@ namespace Execor.Services
                         SavePasswords(list);
                     }
                 }
-        
+
                 public void ToggleLauncherPin(string id)
                 {
                     var list = LoadLaunchers();
@@ -197,7 +202,6 @@ namespace Execor.Services
                         SaveLaunchers(list);
                     }
                 }
-        
+
             }
         }
-        
