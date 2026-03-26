@@ -166,6 +166,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        
 
         <!-- Cancel Button Style (same gradient hover effect) -->
         <Style x:Key="CancelButton" TargetType="Button">
