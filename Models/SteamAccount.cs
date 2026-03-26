@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 
 namespace Execor.Models
 {
@@ -13,9 +14,11 @@ namespace Execor.Models
         public DateTime? LastUsed { get; set; }
         public bool IsPinned { get; set; }
         public int LoginCount { get; set; } = 0;
-        
 
-        // Display property for UI
+        // Tagging system
+        public List<AccountTag> Tags { get; set; } = new List<AccountTag>();
+
+        // Display properties for UI
         public string DisplayName => $"{AccountName} ({Username})";
 
         public string LastUsedDisplay => LastUsed.HasValue

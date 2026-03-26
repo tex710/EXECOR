@@ -42,6 +42,7 @@ namespace Execor
 
         private SteamAccountManager steamAccountManager;
         private List<SteamAccount> steamAccounts;
+        private DispatcherTimer _tagCountdownTimer;
 
         // Selection tracking
         private Launcher selectedLauncher = null;
@@ -69,6 +70,11 @@ namespace Execor
                     this.ShowInTaskbar = false; // hide from taskbar
                 }, DispatcherPriority.ApplicationIdle);
             }
+
+            // Refresh tag countdowns every second
+            _tagCountdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _tagCountdownTimer.Tick += (_, __) => RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+            _tagCountdownTimer.Start();
         }
 
         private void LoadData()
@@ -476,6 +482,37 @@ namespace Execor
             {
                 steamAccountManager.DeleteAccount(a.Id); steamAccounts = steamAccountManager.GetAllAccounts(); RefreshSteamAccountsList();
                 ToastService.Warning($"{a.AccountName} deleted", "Account removed");
+            }
+        }
+
+        private void ManageTags_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.Tag is SteamAccount a)
+            {
+                var dialog = new Execor.Windows.ManageTagsWindow(a) { Owner = this };
+                if (dialog.ShowDialog() == true)
+                {
+                    steamAccountManager.UpdateAccount(a);
+                    steamAccounts = steamAccountManager.GetAllAccounts();
+                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+                }
+            }
+        }
+
+        // Sets each tag badge's background/border color from AccountTag.Color at runtime
+        private void TagBadge_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is Border badge && badge.DataContext is Execor.Models.AccountTag tag)
+            {
+                try
+                {
+                    var color = (Color)ColorConverter.ConvertFromString(tag.Color);
+                    badge.Background = new SolidColorBrush(Color.FromArgb(40, color.R, color.G, color.B));
+                    badge.BorderBrush = new SolidColorBrush(color);
+                    if (badge.Child is TextBlock tb)
+                        tb.Foreground = new SolidColorBrush(color);
+                }
+                catch { /* invalid color string — leave defaults */ }
             }
         }
         #endregion

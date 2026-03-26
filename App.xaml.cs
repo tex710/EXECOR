@@ -16,9 +16,9 @@ namespace Execor
         {
             base.OnStartup(e);
 
-            // Instantiate the OverlayWindow but don't show it yet. Its visibility is controlled by its internal settings.
+            // Instantiate OverlayWindow — its constructor loads settings and sets
+            // its own visibility, so we must NOT call Show() here unconditionally.
             OverlayWindowInstance = new OverlayWindow();
-            OverlayWindowInstance.Show(); // Show it initially, its visibility will be handled by OverlayWindow itself based on settings
         }
 
         protected override void OnExit(ExitEventArgs e)

@@ -774,6 +774,25 @@
                                        FontSize="11"
                                        Foreground="{DynamicResource SubTextBrush}"/>
                         </StackPanel>
+                        <!-- Tags row -->
+                        <ItemsControl ItemsSource="{Binding Tags}" Margin="0,5,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="4" Margin="0,2,5,0" Padding="6,2"
+                                            BorderThickness="1"
+                                            Loaded="TagBadge_Loaded">
+                                        <TextBlock Text="{Binding BadgeText}"
+                                                   FontSize="10" FontWeight="SemiBold"
+                                                   Foreground="White"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                     <!-- Action Buttons -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
@@ -809,6 +828,18 @@
                             <Button.ToolTip>
                                 <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
                                     Content="1 click login"/>
+                            </Button.ToolTip>
+
+                        </Button>
+
+                        <Button Content="🏷️"
+                            Style="{StaticResource TabItemButton}"
+                            Click="ManageTags_Click"
+                            Tag="{Binding}">
+
+                            <Button.ToolTip>
+                                <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
+                                    Content="Manage tags"/>
                             </Button.ToolTip>
 
                         </Button>
@@ -1532,9 +1563,7 @@
                         <Button Content="🎨 Theme Editor"
                                 Style="{StaticResource SidebarButton}"
                                 Click="ThemeEditor_Click"/>
-                        <Button Content="⚙️ Overlay"
-                                Style="{StaticResource SidebarButton}"
-                                Click="OverlaySettings_Click"/>
+                        
                         <Button x:Name="DiscordRPCButton"
         Background="{DynamicResource SurfaceBrush}"
         Foreground="{DynamicResource TextBrush}"

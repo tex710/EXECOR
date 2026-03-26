@@ -312,8 +312,11 @@ namespace Execor.Windows
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _source.RemoveHook(HwndHook);
-            _source = null;
+            if (_source != null)
+            {
+                _source.RemoveHook(HwndHook);
+                _source = null;
+            }
             UnregisterOverlayHotkey();
         }
 
@@ -400,11 +403,11 @@ namespace Execor.Windows
                 // If not in a hidden game, and not hidden by inactivity, ensure visible
                 if (_isOverlayHiddenByAutoHide && (DateTime.Now - _lastActivityTime).TotalSeconds <= _settings.AutoHideTimeoutSeconds)
                 {
-                     if (Visibility == Visibility.Collapsed && !IsEditMode)
-                     {
-                         Visibility = Visibility.Visible;
-                         _isOverlayHiddenByAutoHide = false;
-                     }
+                    if (Visibility == Visibility.Collapsed && !IsEditMode)
+                    {
+                        Visibility = Visibility.Visible;
+                        _isOverlayHiddenByAutoHide = false;
+                    }
                 }
             }
         }
