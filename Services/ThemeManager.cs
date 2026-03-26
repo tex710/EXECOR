@@ -20,7 +20,7 @@ namespace Execor.Services
                 Theme.Orange,
                 Theme.CandyCane,
                 Theme.Vanilla,
-                Theme.HKCS
+                
             };
         }
 
