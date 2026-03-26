@@ -118,5 +118,53 @@
             TextColor = "#FFFFFF",
             SubTextColor = "#A1A1AA"
         };
+
+        public static Theme FrostByte => new Theme
+        {
+            Name = "FrostByte",
+            PrimaryColor = "#00FFFC",
+            SecondaryColor = "#4E5252",
+            BackgroundColor = "#18181B",
+            SurfaceColor = "#27272A",
+            BorderColor = "#3F3F46",
+            TextColor = "#FFFFFF",
+            SubTextColor = "#A1A1AA"
+        };
+
+        public static Theme Coral => new Theme
+        {
+            Name = "Coral",
+            PrimaryColor = "#FC8D91",
+            SecondaryColor = "#FFFAB7",
+            BackgroundColor = "#18181B",
+            SurfaceColor = "#27272A",
+            BorderColor = "#3F3F46",
+            TextColor = "#FFFFFF",
+            SubTextColor = "#A1A1AA"
+        };
+
+        public static Theme Mint => new Theme
+        {
+            Name = "Mint",
+            PrimaryColor = "#B7F4FF",
+            SecondaryColor = "#9BEE9D",
+            BackgroundColor = "#18181B",
+            SurfaceColor = "#27272A",
+            BorderColor = "#3F3F46",
+            TextColor = "#FFFFFF",
+            SubTextColor = "#A1A1AA"
+        };
+
+        public static Theme Midnight => new Theme
+        {
+            Name = "Midnight",
+            PrimaryColor = "#1C176C",
+            SecondaryColor = "#41013D",
+            BackgroundColor = "#18181B",
+            SurfaceColor = "#27272A",
+            BorderColor = "#3F3F46",
+            TextColor = "#FFFFFF",
+            SubTextColor = "#A1A1AA"
+        };
     }
 }
