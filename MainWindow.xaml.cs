@@ -73,7 +73,13 @@ namespace Execor
 
             // Refresh tag countdowns every second
             _tagCountdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            _tagCountdownTimer.Tick += (_, __) => RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+            _tagCountdownTimer.Tick += (_, __) =>
+            {
+                bool hasActiveCountdowns = steamAccounts
+                    .Any(a => a.Tags.Any(t => t.HasCountdown && !t.IsExpired));
+                if (hasActiveCountdowns)
+                    RefreshSteamAccountsList(SteamAccountSearchBox.Text);
+            };
             _tagCountdownTimer.Start();
         }
 

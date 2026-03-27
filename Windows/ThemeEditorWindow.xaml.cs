@@ -223,6 +223,8 @@ namespace Execor
         {
             if (sender is Border border && border.Tag is string colorType)
             {
+                System.Windows.Forms.Application.EnableVisualStyles();
+
                 using (ColorDialog colorDialog = new ColorDialog())
                 {
                     // Get current color
@@ -236,12 +238,19 @@ namespace Execor
 
                     colorDialog.FullOpen = true;
 
-                    if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    // Use a Win32 owner handle so the dialog works correctly in published builds
+                    var helper = new System.Windows.Interop.WindowInteropHelper(this);
+                    var owner = new System.Windows.Forms.NativeWindow();
+                    owner.AssignHandle(helper.Handle);
+
+                    if (colorDialog.ShowDialog(owner) == System.Windows.Forms.DialogResult.OK)
                     {
                         var selectedColor = colorDialog.Color;
                         string hexColor = $"#{selectedColor.R:X2}{selectedColor.G:X2}{selectedColor.B:X2}";
                         GetColorTextBoxByType(colorType).Text = hexColor;
                     }
+
+                    owner.ReleaseHandle();
                 }
             }
         }

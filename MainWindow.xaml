@@ -99,7 +99,8 @@
         <!-- Animated Dark Tooltip Style (Clean, No Errors) -->
         <Style x:Key="AnimatedDarkToolTip" TargetType="ToolTip">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Placement" Value="Mouse"/>
+            <Setter Property="Placement" Value="Bottom"/>
+            <Setter Property="VerticalOffset" Value="5"/>
             <Setter Property="HasDropShadow" Value="False"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Template">
@@ -217,7 +218,7 @@
                                    Text="{TemplateBinding Content}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Visibility="Collapsed"
+                                   Opacity="0"
                                    Foreground="{DynamicResource TextBrush}">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="White"
@@ -240,8 +241,8 @@
                                         </LinearGradientBrush>
                                     </Setter.Value>
                                 </Setter>
-                                <Setter TargetName="GlowText" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="NormalText" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="GlowText" Property="Opacity" Value="1"/>
+                                <Setter TargetName="NormalText" Property="Opacity" Value="0"/>
                             </Trigger>
 
                             <!-- Disabled state -->
@@ -797,64 +798,64 @@
                     <!-- Action Buttons -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Content="👤"
-                            Style="{StaticResource TabItemButton}"
-                            Click="CopySteamUsername_Click"
-                            Tag="{Binding}">
-
+    Style="{StaticResource TabItemButton}"
+    Click="CopySteamUsername_Click"
+    Tag="{Binding}"
+    ToolTipService.Placement="Bottom"
+    ToolTipService.VerticalOffset="5">
                             <Button.ToolTip>
                                 <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
-                                    Content="Copy your username"/>
+            Content="Copy your username"/>
                             </Button.ToolTip>
-
                         </Button>
 
                         <Button Content="🔑"
-                            Style="{StaticResource TabItemButton}"
-                            Click="CopySteamPassword_Click"
-                            Tag="{Binding}">
-        
+    Style="{StaticResource TabItemButton}"
+    Click="CopySteamPassword_Click"
+    Tag="{Binding}"
+    ToolTipService.Placement="Bottom"
+    ToolTipService.VerticalOffset="5">
                             <Button.ToolTip>
                                 <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
-                                     Content="Copy your password"/>
+             Content="Copy your password"/>
                             </Button.ToolTip>
-
                         </Button>
 
                         <Button Content="👾"
-                            Style="{StaticResource TabItemButton}"
-                            Click="SwitchSteamAccount_Click"
-                            Tag="{Binding}">
-
+    Style="{StaticResource TabItemButton}"
+    Click="SwitchSteamAccount_Click"
+    Tag="{Binding}"
+    ToolTipService.Placement="Bottom"
+    ToolTipService.VerticalOffset="5">
                             <Button.ToolTip>
                                 <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
-                                    Content="1 click login"/>
+            Content="1 click login"/>
                             </Button.ToolTip>
-
                         </Button>
 
                         <Button Content="🏷️"
-                            Style="{StaticResource TabItemButton}"
-                            Click="ManageTags_Click"
-                            Tag="{Binding}">
-
+    Style="{StaticResource TabItemButton}"
+    Click="ManageTags_Click"
+    Tag="{Binding}"
+    ToolTipService.Placement="Bottom"
+    ToolTipService.VerticalOffset="5">
                             <Button.ToolTip>
                                 <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
-                                    Content="Manage tags"/>
+            Content="Manage tags"/>
                             </Button.ToolTip>
-
                         </Button>
 
                         <Button Content="🗑"
-                            Style="{StaticResource TabItemButton}"
-                            Click="DeleteSteamAccount_Click"
-                            Tag="{Binding}"
-                            Margin="0">
-
+    Style="{StaticResource TabItemButton}"
+    Click="DeleteSteamAccount_Click"
+    Tag="{Binding}"
+    Margin="0"
+    ToolTipService.Placement="Bottom"
+    ToolTipService.VerticalOffset="5">
                             <Button.ToolTip>
                                 <ToolTip Style="{StaticResource AnimatedDarkToolTip}"
-                                    Content="Are you sure you want to delete this?"/>
+            Content="Are you sure you want to delete this?"/>
                             </Button.ToolTip>
-
                         </Button>
 
                     </StackPanel>
